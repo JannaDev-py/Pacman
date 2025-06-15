@@ -14,10 +14,10 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #f27;
     }
 
     div {
+      position: relative;
       width: min(500px, 90dvw);
       height: min(500px, 90dvw);
       background: #3f7;
@@ -31,11 +31,19 @@
       height: 100%;
       background: #222;
     }
+
+    img {
+      position: absolute;
+      top: 0px;
+      width: 100%;
+      height: 100%;
+    }
   </style>
 </head>
 <body>
   <div>
     <canvas></canvas>
+    <img src="./bg.png" alt="pacman">
   </div>
 </body>
 </html>
