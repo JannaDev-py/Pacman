@@ -35,6 +35,7 @@ canvas.height = canvasContainer.clientHeight;
 window.addEventListener('resize', () => {
     canvas.width = canvasContainer.clientWidth;
     canvas.height = canvasContainer.clientHeight;
+    renderGameboard(gameboard);
 });
 function renderGameboard(gameboard) {
     const widthPiece = canvas.width / gameboard[0].length;
