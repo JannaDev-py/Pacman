@@ -7,18 +7,35 @@
   <title>Document</title>
   <style>
     body {
+      background: #444;
+      height: 100dvh;
       margin: 0;
       padding: 0;
-      display: grid;
-      place-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f27;
+    }
+
+    div {
+      width: min(500px, 90dvw);
+      height: min(500px, 90dvw);
+      background: #3f7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     canvas {
+      width: 100%;
+      height: 100%;
       background: #222;
     }
   </style>
 </head>
 <body>
-  <canvas></canvas>
+  <div>
+    <canvas></canvas>
+  </div>
 </body>
 </html>
