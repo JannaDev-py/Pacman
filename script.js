@@ -38,7 +38,8 @@ const config = {
     ghostSpeed: 10,
     widthPice: canvas.width / gameboard[0].length,
     heightPice: canvas.height / gameboard.length,
-    pacmanDirection: 'right'
+    pacmanDirection: 'right',
+    pacmanNextDirection: 'right'
 };
 class Pacman {
     constructor(x, y) {
@@ -87,6 +88,28 @@ class Pacman {
     }
 }
 const pacman = new Pacman(10, 13); // 10, 13 initial position
+function checkForNextDirection() {
+    if (config.pacmanNextDirection === 'right') {
+        if (gameboard[pacman.y][pacman.x + 1] !== 1) {
+            config.pacmanDirection = 'right';
+        }
+    }
+    else if (config.pacmanNextDirection === 'left') {
+        if (gameboard[pacman.y][pacman.x - 1] !== 1) {
+            config.pacmanDirection = 'left';
+        }
+    }
+    else if (config.pacmanNextDirection === 'up') {
+        if (gameboard[pacman.y - 1][pacman.x] !== 1) {
+            config.pacmanDirection = 'up';
+        }
+    }
+    else if (config.pacmanNextDirection === 'down') {
+        if (gameboard[pacman.y + 1][pacman.x] !== 1) {
+            config.pacmanDirection = 'down';
+        }
+    }
+}
 window.addEventListener('resize', () => {
     canvas.width = canvasContainer.clientWidth;
     canvas.height = canvasContainer.clientHeight;
@@ -128,15 +151,16 @@ setInterval(() => {
     if (config.pacmanDirection === 'down')
         pacman.moveDown();
     renderGameboard(gameboard);
+    checkForNextDirection();
 }, config.pacmanSpeed);
 document.addEventListener('keydown', (event) => {
     const key = event.key;
     if (key === 'ArrowRight')
-        config.pacmanDirection = 'right';
+        config.pacmanNextDirection = 'right';
     else if (key === 'ArrowLeft')
-        config.pacmanDirection = 'left';
+        config.pacmanNextDirection = 'left';
     else if (key === 'ArrowUp')
-        config.pacmanDirection = 'up';
+        config.pacmanNextDirection = 'up';
     else if (key === 'ArrowDown')
-        config.pacmanDirection = 'down';
+        config.pacmanNextDirection = 'down';
 });
