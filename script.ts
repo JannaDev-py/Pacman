@@ -36,7 +36,7 @@ canvas.width = canvasContainer.clientWidth
 canvas.height = canvasContainer.clientHeight
 
 const config = {
-  pacmanSpeed: 10,
+  pacmanSpeed: 1000,
   ghostSpeed: 10,
   widthPice: canvas.width / gameboard[0].length,
   heightPice: canvas.height / gameboard.length,
@@ -58,6 +58,7 @@ class Pacman {
     }
     gameboard[this.y][this.x + 1] = 'P'
     gameboard[this.y][this.x] = 0
+    this.x += 1
   }
 }
 
@@ -88,10 +89,6 @@ function renderGameboard (gameboard: Array<Array<number | string>>): void {
         ctx.fill()
         ctx.closePath()
       } else if (cell === 'P') {
-        if (config.pacmanDirection === 'right') {
-          pacman.moveRight()
-        }
-
         Elpacman.style.left = `${(cellIndex * widthPiece) + 5}px`
         Elpacman.style.top = `${(rowIndex * heightPiece)}px`
       }
@@ -100,3 +97,10 @@ function renderGameboard (gameboard: Array<Array<number | string>>): void {
 }
 
 renderGameboard(gameboard)
+
+setInterval(() => {
+  if (config.pacmanDirection === 'right') {
+    pacman.moveRight()
+    renderGameboard(gameboard)
+  }
+}, config.pacmanSpeed)
