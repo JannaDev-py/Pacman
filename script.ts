@@ -20,7 +20,7 @@ const gameboard = [
   [2, 2, 2, 2, 2, 2, 2, 2, 1, 0, 0, 0, 1, 2, 2, 2, 2, 2, 2, 2, 2],
   [1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1],
   [0, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 0],
-  [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 'P', 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
+  [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 'P', 1, 2, 1, 0, 0, 0, 0],
   [1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1],
   [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
   [1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1],
@@ -72,9 +72,19 @@ class Pacman {
     gameboard[this.y][this.x] = 0
     this.x -= 1
   }
-}
 
-const pacman = new Pacman(10, 13)
+  moveUp (): void {
+    Elpacman.style.rotate = '270deg'
+    const nextPositionX = gameboard[this.y - 1][this.x]
+    if (nextPositionX === 1) {
+      return
+    }
+    gameboard[this.y - 1][this.x] = 'P'
+    gameboard[this.y][this.x] = 0
+    this.y -= 1
+  }
+}
+const pacman = new Pacman(13, 13)
 
 window.addEventListener('resize', () => {
   canvas.width = canvasContainer.clientWidth
@@ -112,7 +122,7 @@ renderGameboard(gameboard)
 
 setInterval(() => {
   if (config.pacmanDirection === 'right') {
-    pacman.moveRight()
+    pacman.moveUp()
     renderGameboard(gameboard)
   }
 }, config.pacmanSpeed)
