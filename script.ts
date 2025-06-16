@@ -36,7 +36,7 @@ canvas.width = canvasContainer.clientWidth
 canvas.height = canvasContainer.clientHeight
 
 const config = {
-  pacmanSpeed: 1000,
+  pacmanSpeed: 1000, // ms to move one bloxk
   ghostSpeed: 10,
   widthPice: canvas.width / gameboard[0].length,
   heightPice: canvas.height / gameboard.length,
@@ -52,6 +52,7 @@ class Pacman {
   }
 
   moveRight (): void {
+    Elpacman.style.rotate = '0deg'
     const nextPositionX = gameboard[this.y][this.x + 1]
     if (nextPositionX === 1) {
       return
@@ -59,6 +60,17 @@ class Pacman {
     gameboard[this.y][this.x + 1] = 'P'
     gameboard[this.y][this.x] = 0
     this.x += 1
+  }
+
+  moveLeft (): void {
+    Elpacman.style.rotate = '180deg'
+    const nextPositionX = gameboard[this.y][this.x - 1]
+    if (nextPositionX === 1) {
+      return
+    }
+    gameboard[this.y][this.x - 1] = 'P'
+    gameboard[this.y][this.x] = 0
+    this.x -= 1
   }
 }
 
