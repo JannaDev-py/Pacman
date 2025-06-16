@@ -15,12 +15,12 @@ const gameboard = [
     [1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1],
     [1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1],
     [1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1],
-    [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 'P', 1, 2, 1, 0, 0, 0, 0],
     [1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 0, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1],
     [2, 2, 2, 2, 2, 2, 2, 2, 1, 0, 0, 0, 1, 2, 2, 2, 2, 2, 2, 2, 2],
     [1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1],
     [0, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 0],
-    [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 'P', 1, 2, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
     [1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1],
     [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
     [1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1],
@@ -75,8 +75,18 @@ class Pacman {
         gameboard[this.y][this.x] = 0;
         this.y -= 1;
     }
+    moveDown() {
+        Elpacman.style.rotate = '90deg';
+        const nextPositionX = gameboard[this.y + 1][this.x];
+        if (nextPositionX === 1) {
+            return;
+        }
+        gameboard[this.y + 1][this.x] = 'P';
+        gameboard[this.y][this.x] = 0;
+        this.y += 1;
+    }
 }
-const pacman = new Pacman(13, 13);
+const pacman = new Pacman(13, 9); // 10, 13 initial position
 window.addEventListener('resize', () => {
     canvas.width = canvasContainer.clientWidth;
     canvas.height = canvasContainer.clientHeight;
@@ -110,7 +120,7 @@ function renderGameboard(gameboard) {
 renderGameboard(gameboard);
 setInterval(() => {
     if (config.pacmanDirection === 'right') {
-        pacman.moveUp();
+        pacman.moveDown();
         renderGameboard(gameboard);
     }
 }, config.pacmanSpeed);
