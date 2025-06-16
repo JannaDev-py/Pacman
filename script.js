@@ -34,7 +34,7 @@ const gameboard = [
 canvas.width = canvasContainer.clientWidth;
 canvas.height = canvasContainer.clientHeight;
 const config = {
-    pacmanSpeed: 500, // ms to move one block
+    pacmanSpeed: 150, // ms to move one block
     ghostSpeed: 10,
     widthPice: canvas.width / gameboard[0].length,
     heightPice: canvas.height / gameboard.length,
