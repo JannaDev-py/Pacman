@@ -2,7 +2,7 @@
 const canvas = document.querySelector('canvas');
 const canvasContainer = document.querySelector('div');
 const ctx = canvas.getContext('2d');
-const pacman = document.querySelector('#pacman');
+const Elpacman = document.querySelector('#pacman');
 // 2 indicates that theres a coin for pacman
 // 0 indicates empty filed
 // 1 indicates a wall
@@ -33,14 +33,38 @@ const gameboard = [
 ];
 canvas.width = canvasContainer.clientWidth;
 canvas.height = canvasContainer.clientHeight;
+const config = {
+    pacmanSpeed: 10,
+    ghostSpeed: 10,
+    widthPice: canvas.width / gameboard[0].length,
+    heightPice: canvas.height / gameboard.length,
+    pacmanDirection: 'right'
+};
+class Pacman {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+    moveRight() {
+        const nextPositionX = gameboard[this.y][this.x + 1];
+        if (nextPositionX === 1) {
+            return;
+        }
+        gameboard[this.y][this.x + 1] = 'P';
+        gameboard[this.y][this.x] = 0;
+    }
+}
+const pacman = new Pacman(10, 13);
 window.addEventListener('resize', () => {
     canvas.width = canvasContainer.clientWidth;
     canvas.height = canvasContainer.clientHeight;
+    config.widthPice = canvas.width / gameboard[0].length;
+    config.heightPice = canvas.height / gameboard.length;
     renderGameboard(gameboard);
 });
 function renderGameboard(gameboard) {
-    const widthPiece = canvas.width / gameboard[0].length;
-    const heightPiece = canvas.height / gameboard.length;
+    const widthPiece = config.widthPice;
+    const heightPiece = config.heightPice;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     gameboard.forEach((row, rowIndex) => {
         row.forEach((cell, cellIndex) => {
@@ -55,8 +79,11 @@ function renderGameboard(gameboard) {
                 ctx.closePath();
             }
             else if (cell === 'P') {
-                pacman.style.left = `${(cellIndex * widthPiece) + 5}px`;
-                pacman.style.top = `${(rowIndex * heightPiece) + 0}px`;
+                if (config.pacmanDirection === 'right') {
+                    pacman.moveRight();
+                }
+                Elpacman.style.left = `${(cellIndex * widthPiece) + 5}px`;
+                Elpacman.style.top = `${(rowIndex * heightPiece)}px`;
             }
         });
     });

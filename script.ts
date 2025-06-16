@@ -1,7 +1,7 @@
 const canvas = document.querySelector('canvas') as HTMLCanvasElement
 const canvasContainer = document.querySelector('div') as HTMLDivElement
 const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
-const pacman = document.querySelector('#pacman') as HTMLImageElement
+const Elpacman = document.querySelector('#pacman') as HTMLImageElement
 
 // 2 indicates that theres a coin for pacman
 // 0 indicates empty filed
@@ -35,15 +35,45 @@ const gameboard = [
 canvas.width = canvasContainer.clientWidth
 canvas.height = canvasContainer.clientHeight
 
+const config = {
+  pacmanSpeed: 10,
+  ghostSpeed: 10,
+  widthPice: canvas.width / gameboard[0].length,
+  heightPice: canvas.height / gameboard.length,
+  pacmanDirection: 'right'
+}
+
+class Pacman {
+  x: number
+  y: number
+  constructor (x: number, y: number) {
+    this.x = x
+    this.y = y
+  }
+
+  moveRight (): void {
+    const nextPositionX = gameboard[this.y][this.x + 1]
+    if (nextPositionX === 1) {
+      return
+    }
+    gameboard[this.y][this.x + 1] = 'P'
+    gameboard[this.y][this.x] = 0
+  }
+}
+
+const pacman = new Pacman(10, 13)
+
 window.addEventListener('resize', () => {
   canvas.width = canvasContainer.clientWidth
   canvas.height = canvasContainer.clientHeight
+  config.widthPice = canvas.width / gameboard[0].length
+  config.heightPice = canvas.height / gameboard.length
   renderGameboard(gameboard)
 })
 
 function renderGameboard (gameboard: Array<Array<number | string>>): void {
-  const widthPiece = canvas.width / gameboard[0].length
-  const heightPiece = canvas.height / gameboard.length
+  const widthPiece = config.widthPice
+  const heightPiece = config.heightPice
   ctx.clearRect(0, 0, canvas.width, canvas.height)
 
   gameboard.forEach((row, rowIndex) => {
@@ -58,8 +88,12 @@ function renderGameboard (gameboard: Array<Array<number | string>>): void {
         ctx.fill()
         ctx.closePath()
       } else if (cell === 'P') {
-        pacman.style.left = `${(cellIndex * widthPiece) + 5}px`
-        pacman.style.top = `${(rowIndex * heightPiece) + 0}px`
+        if (config.pacmanDirection === 'right') {
+          pacman.moveRight()
+        }
+
+        Elpacman.style.left = `${(cellIndex * widthPiece) + 5}px`
+        Elpacman.style.top = `${(rowIndex * heightPiece)}px`
       }
     })
   })
