@@ -18,8 +18,8 @@
 
     div {
       position: relative;
-      width: min(500px, 90dvw);
-      height: min(500px, 90dvw);
+      width: min(700px, 90dvw);
+      height: min(700px, 90dvw);
       background: #3f7;
       display: flex;
       align-items: center;
@@ -32,17 +32,24 @@
       background: #222;
     }
 
-    img {
+    #bg {
       position: absolute;
       width: 102%;
       height: 100%;
+    }
+
+    #pacman {
+      position: absolute;
+      width: 4%;
+      height: 4%;
     }
   </style>
 </head>
 <body>
   <div>
     <canvas></canvas>
-    <img src="src/bg.png" alt="pacman">
+    <img src="src/bg.png" alt="pacman" id="bg">
+    <img src="src/animation.gif" alt="pacman" id="pacman">
   </div>
 </body>
 </html>

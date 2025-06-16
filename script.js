@@ -2,6 +2,7 @@
 const canvas = document.querySelector('canvas');
 const canvasContainer = document.querySelector('div');
 const ctx = canvas.getContext('2d');
+const pacman = document.querySelector('#pacman');
 // 2 indicates that theres a coin for pacman
 // 0 indicates empty filed
 // 1 indicates a wall
@@ -19,7 +20,7 @@ const gameboard = [
     [2, 2, 2, 2, 2, 2, 2, 2, 1, 0, 0, 0, 1, 2, 2, 2, 2, 2, 2, 2, 2],
     [1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1],
     [0, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 0],
-    [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 'P', 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
     [1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1],
     [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
     [1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1],
@@ -48,10 +49,14 @@ function renderGameboard(gameboard) {
                 ctx.beginPath();
                 const x = (cellIndex * widthPiece) + (widthPiece / 2);
                 const y = (rowIndex * heightPiece) + (heightPiece / 2);
-                ctx.arc(x, y, widthPiece / 3, 0, 2 * Math.PI);
+                ctx.arc(x, y, widthPiece / 5, 0, 2 * Math.PI);
                 ctx.fillStyle = 'yellow';
                 ctx.fill();
                 ctx.closePath();
+            }
+            else if (cell === 'P') {
+                pacman.style.left = `${(cellIndex * widthPiece) + (widthPiece / 5)}px`;
+                pacman.style.top = `${(rowIndex * heightPiece) + 0}px`;
             }
         });
     });
