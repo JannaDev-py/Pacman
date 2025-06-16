@@ -15,12 +15,12 @@ const gameboard = [
     [1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1],
     [1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1],
     [1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1],
-    [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 'P', 1, 2, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
     [1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 0, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1],
     [2, 2, 2, 2, 2, 2, 2, 2, 1, 0, 0, 0, 1, 2, 2, 2, 2, 2, 2, 2, 2],
     [1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1],
     [0, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 0],
-    [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 'P', 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
     [1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1],
     [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
     [1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1],
@@ -34,7 +34,7 @@ const gameboard = [
 canvas.width = canvasContainer.clientWidth;
 canvas.height = canvasContainer.clientHeight;
 const config = {
-    pacmanSpeed: 1000, // ms to move one bloxk
+    pacmanSpeed: 500, // ms to move one block
     ghostSpeed: 10,
     widthPice: canvas.width / gameboard[0].length,
     heightPice: canvas.height / gameboard.length,
@@ -86,7 +86,7 @@ class Pacman {
         this.y += 1;
     }
 }
-const pacman = new Pacman(13, 9); // 10, 13 initial position
+const pacman = new Pacman(10, 13); // 10, 13 initial position
 window.addEventListener('resize', () => {
     canvas.width = canvasContainer.clientWidth;
     canvas.height = canvasContainer.clientHeight;
@@ -119,8 +119,24 @@ function renderGameboard(gameboard) {
 }
 renderGameboard(gameboard);
 setInterval(() => {
-    if (config.pacmanDirection === 'right') {
+    if (config.pacmanDirection === 'right')
+        pacman.moveRight();
+    if (config.pacmanDirection === 'left')
+        pacman.moveLeft();
+    if (config.pacmanDirection === 'up')
+        pacman.moveUp();
+    if (config.pacmanDirection === 'down')
         pacman.moveDown();
-        renderGameboard(gameboard);
-    }
+    renderGameboard(gameboard);
 }, config.pacmanSpeed);
+document.addEventListener('keydown', (event) => {
+    const key = event.key;
+    if (key === 'ArrowRight')
+        config.pacmanDirection = 'right';
+    else if (key === 'ArrowLeft')
+        config.pacmanDirection = 'left';
+    else if (key === 'ArrowUp')
+        config.pacmanDirection = 'up';
+    else if (key === 'ArrowDown')
+        config.pacmanDirection = 'down';
+});
