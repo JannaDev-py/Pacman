@@ -55,7 +55,7 @@ function renderGameboard(gameboard) {
                 ctx.closePath();
             }
             else if (cell === 'P') {
-                pacman.style.left = `${(cellIndex * widthPiece) + (widthPiece / 5)}px`;
+                pacman.style.left = `${(cellIndex * widthPiece) + 5}px`;
                 pacman.style.top = `${(rowIndex * heightPiece) + 0}px`;
             }
         });
