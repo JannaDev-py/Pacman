@@ -61,6 +61,12 @@ class Pacman {
     gameboard[this.y][this.x + 1] = 'P'
     gameboard[this.y][this.x] = 0
     this.x += 1
+
+    if (this.x === 20 && this.y === 10) {
+      gameboard[this.y][this.x] = 0
+      gameboard[this.y][0] = 'P'
+      this.x = 0
+    }
   }
 
   moveLeft (): void {
