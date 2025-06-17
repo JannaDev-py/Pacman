@@ -1,57 +1,48 @@
-export function followTheGoal (
+export function followThetarget (
   gameboard: Array<Array<number | string>>,
-  goal: { x: number, y: number },
+  target: { x: number, y: number },
   currentPosition: { x: number, y: number },
   currentDirection: string): string {
   // ghost can go back so lest get the posible moves
-  let posibleMoves = ['right', 'left', 'up', 'down']
+  let posibleMoves = ['up', 'left', 'down', 'right']
+
+  posibleMoves = posibleMoves.filter((move) => { return move !== currentDirection })
 
   let posibleMovesCordinates: Array<{ direction: string, x: number, y: number } | undefined> = [
-    { direction: 'right', x: currentPosition.x + 1, y: currentPosition.y },
-    { direction: 'left', x: currentPosition.x - 1, y: currentPosition.y },
     { direction: 'up', x: currentPosition.x, y: currentPosition.y - 1 },
-    { direction: 'down', x: currentPosition.x, y: currentPosition.y + 1 }
+    { direction: 'left', x: currentPosition.x - 1, y: currentPosition.y },
+    { direction: 'down', x: currentPosition.x, y: currentPosition.y + 1 },
+    { direction: 'right', x: currentPosition.x + 1, y: currentPosition.y }
   ]
-
-  if (currentDirection === 'right') {
-    posibleMoves = ['left', 'up', 'down']
-  } else if (currentDirection === 'left') {
-    posibleMoves = ['right', 'up', 'down']
-  } else if (currentDirection === 'up') {
-    posibleMoves = ['right', 'left', 'down']
-  } else if (currentDirection === 'down') {
-    posibleMoves = ['right', 'left', 'up']
-  }
-
   // now lets get the cordinates for the posible moves
   posibleMovesCordinates = posibleMovesCordinates.filter((move, index) => {
     if (move !== undefined && posibleMoves.includes(move.direction)) {
-      return { direction: move.direction, x: move.x, y: move.y }
-    }
-    return undefined
-  })
-
-  // now lets see if we can go to the posible moves
-  const posibleMovesOnGameboard = posibleMovesCordinates.map((move) => {
-    if (move !== undefined) {
-      if (gameboard[move.y][move.x] !== 1) {
-        return move
-      }
+      return move
     }
     return undefined
   }).filter(Boolean)
 
-  if (posibleMovesOnGameboard.length === 1) {
-    return (posibleMovesOnGameboard[0] as any).direction as string
+  // now lets see if we can go to the posible moves
+  interface Move { direction: string, x: number, y: number }
+
+  const posibleMovesOnGameboard = posibleMovesCordinates.map((move) => {
+    if (gameboard[(move as Move).y][(move as Move).x] !== 1) {
+      return move
+    }
+    return undefined
+  }).filter(Boolean)
+
+  if (posibleMovesOnGameboard.length === 1 && posibleMovesOnGameboard[0] !== undefined) {
+    return posibleMovesOnGameboard[0].direction
   }
 
-  // one we got the posible moves we can go to the goal
-  // frist lest get the distance between the posible moves and the goal
+  // one we got the posible moves we can go to the target
+  // frist lest get the distance between the posible moves and the target
   const distances = posibleMovesOnGameboard.map((move) => {
-    const x = Math.abs((move as any).x - goal.x)
-    const y = Math.abs((move as any).y - goal.y)
+    const x = Math.abs((move as Move).x - target.x)
+    const y = Math.abs((move as Move).y - target.y)
     const distance = Math.sqrt(x * x + y * y)
-    return { direction: (move as any).direction, distance }
+    return { direction: (move as Move).direction, distance }
   })
 
   // lets get the move to the smallest distance

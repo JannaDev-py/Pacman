@@ -1,4 +1,4 @@
-import { followTheGoal } from './routeAlgorithm.js'
+import { followThetarget } from './routeAlgorithm.js'
 const canvas = document.querySelector('canvas') as HTMLCanvasElement
 const canvasContainer = document.querySelector('div') as HTMLDivElement
 const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
@@ -187,4 +187,4 @@ document.addEventListener('keydown', (event) => {
   else if (key === 'ArrowDown') config.pacmanNextDirection = 'down'
 })
 
-console.log(followTheGoal(gameboard, { x: 13, y: 10 }, { x: 13, y: 13 }, 'left'))
+console.log(followThetarget(gameboard, { x: 10, y: 13 }, { x: 10, y: 17 }, 'up'))
