@@ -15,7 +15,7 @@ const Elclyde = document.querySelector('#clyde');
 // i indicates inky
 // c indicates clyde
 // P indicates pacman
-export const gameboard = [
+const gameboard = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
     [1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1],
@@ -40,6 +40,13 @@ export const gameboard = [
     [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 ];
+const startPositions = {
+    pacman: { x: 10, y: 13 },
+    pinky: { x: 11, y: 10 },
+    clyde: { x: 11, y: 11 },
+    blinky: { x: 9, y: 10 },
+    inky: { x: 9, y: 11 }
+};
 canvas.width = canvasContainer.clientWidth;
 canvas.height = canvasContainer.clientHeight;
 const config = {
@@ -49,11 +56,6 @@ const config = {
     pacmanDirection: 'right',
     pacmanNextDirection: 'right'
 };
-// const ghostConfig = {
-//   ghostSpeed: 10,
-//   ghostDirection: 'right'
-// }
-// console.log(ghostConfig)
 class Pacman {
     constructor(x, y) {
         this.x = x;
@@ -111,28 +113,72 @@ class Pacman {
     }
 }
 class Ghost {
-    constructor(x, y, el) {
+    constructor(x, y, el, letter) {
         this.el = el;
         this.x = x;
         this.y = y;
+        this.letter = letter;
     }
-    moveRight(letter) {
+    moveRight() {
         this.el.style.rotate = '0deg';
         const nextPositionX = gameboard[this.y][this.x + 1];
         if (nextPositionX === 1 || nextPositionX === 3) {
             return;
         }
-        gameboard[this.y][this.x + 1] = letter;
+        gameboard[this.y][this.x + 1] = this.letter;
         gameboard[this.y][this.x] = 0;
         this.x += 1;
         if (this.x === 20 && this.y === 10) {
             gameboard[this.y][this.x] = 0;
-            gameboard[this.y][0] = letter;
+            gameboard[this.y][0] = this.letter;
             this.x = 0;
         }
     }
+    moveLeft() {
+        this.el.style.rotate = '180deg';
+        const nextPosition = gameboard[this.y][this.x - 1];
+        if (nextPosition === 1 || nextPosition === 3) {
+            return;
+        }
+        gameboard[this.y][this.x - 1] = this.letter;
+        gameboard[this.y][this.x] = 0;
+        this.x -= 1;
+        if (this.x === 0 && this.y === 10) {
+            gameboard[this.y][this.x] = 0;
+            gameboard[this.y][20] = this.letter;
+            this.x = 20;
+        }
+    }
+    moveUp() {
+        this.el.style.rotate = '270deg';
+        const nextPosition = gameboard[this.y - 1][this.x];
+        if (nextPosition === 1 || nextPosition === 3) {
+            return;
+        }
+        gameboard[this.y - 1][this.x] = this.letter;
+        gameboard[this.y][this.x] = 0;
+        this.y -= 1;
+    }
+    moveDown() {
+        Elpacman.style.rotate = '90deg';
+        const nextPosition = gameboard[this.y + 1][this.x];
+        if (nextPosition === 1 || nextPosition === 3) {
+            return;
+        }
+        gameboard[this.y + 1][this.x] = this.letter;
+        gameboard[this.y][this.x] = 0;
+        this.y += 1;
+    }
 }
-const pacman = new Pacman(10, 13); // 10, 13 initial position
+const pacman = new Pacman(startPositions.pacman.x, startPositions.pacman.y); // 10, 13 initial position
+const ghosts = [
+    new Ghost(startPositions.blinky.x, startPositions.blinky.y, Elblinky, 'b'),
+    new Ghost(startPositions.pinky.x, startPositions.pinky.y, Elpinky, 'p'),
+    new Ghost(startPositions.inky.x, startPositions.inky.y, Elinky, 'i'),
+    new Ghost(startPositions.clyde.x, startPositions.clyde.y, Elclyde, 'c')
+];
+ghosts[0].moveRight();
+renderGameboard(gameboard);
 function checkForNextDirection() {
     if (config.pacmanNextDirection === 'right') {
         if (gameboard[pacman.y][pacman.x + 1] !== 1 && gameboard[pacman.y][pacman.x + 1] !== 3) {
