@@ -23,20 +23,23 @@ currentPosition, currentDirection) {
     }
     // now lets get the cordinates for the posible moves
     posibleMovesCordinates = posibleMovesCordinates.filter((move, index) => {
-        if (move !== undefined && move.direction === posibleMoves[index - 1]) {
+        if (move !== undefined && posibleMoves.includes(move.direction)) {
             return { direction: move.direction, x: move.x, y: move.y };
         }
         return undefined;
     });
     // now lets see if we can go to the posible moves
-    const posibleMovesOnGameboard = posibleMovesCordinates.filter((move) => {
+    const posibleMovesOnGameboard = posibleMovesCordinates.map((move) => {
         if (move !== undefined) {
             if (gameboard[move.y][move.x] !== 1) {
-                return move.direction;
+                const tempMove = move.direction;
+                return tempMove;
             }
         }
         return undefined;
-    });
-    console.log(posibleMovesOnGameboard);
+    }).filter(Boolean);
+    if (posibleMovesOnGameboard.length === 1) {
+        return posibleMovesOnGameboard[0];
+    }
     return 'hola';
 }

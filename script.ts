@@ -187,4 +187,4 @@ document.addEventListener('keydown', (event) => {
   else if (key === 'ArrowDown') config.pacmanNextDirection = 'down'
 })
 
-followTheGoal(gameboard, { x: 10, y: 13 }, 'right')
+console.log(followTheGoal(gameboard, { x: 13, y: 13 }, 'left'))
