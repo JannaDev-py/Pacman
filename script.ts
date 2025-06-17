@@ -3,10 +3,19 @@ const canvas = document.querySelector('canvas') as HTMLCanvasElement
 const canvasContainer = document.querySelector('div') as HTMLDivElement
 const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
 const Elpacman = document.querySelector('#pacman') as HTMLImageElement
+const Elblinky = document.querySelector('#blinky') as HTMLImageElement
+const Elpinky = document.querySelector('#pinky') as HTMLImageElement
+const Elinky = document.querySelector('#inky') as HTMLImageElement
+const Elclyde = document.querySelector('#clyde') as HTMLImageElement
 
 // 2 indicates that theres a coin for pacman
 // 0 indicates empty filed
 // 1 indicates a wall
+// b indicates blinky
+// p indicates pinky
+// i indicates inky
+// c indicates clyde
+// P indicates pacman
 export const gameboard = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
   [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
@@ -18,8 +27,8 @@ export const gameboard = [
   [1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1],
   [1, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 1],
   [1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 3, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1],
-  [2, 2, 2, 2, 2, 2, 2, 2, 1, 0, 0, 0, 1, 2, 2, 2, 2, 2, 2, 2, 2], // x = 0 y = 10, x = 21 y = 10
-  [1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1],
+  [2, 2, 2, 2, 2, 2, 2, 2, 1, 'b', 0, 'p', 1, 2, 2, 2, 2, 2, 2, 2, 2], // x = 0 y = 10, x = 21 y = 10
+  [1, 1, 1, 1, 1, 2, 1, 2, 1, 'i', 0, 'c', 1, 2, 1, 2, 1, 1, 1, 1, 1],
   [1, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 1],
   [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 'P', 2, 2, 2, 1, 2, 1, 0, 0, 0, 1],
   [1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1],
@@ -116,6 +125,34 @@ class Pacman {
   }
 }
 
+class Ghost {
+  x: number
+  y: number
+  el: HTMLImageElement
+  constructor (x: number, y: number, el: HTMLImageElement) {
+    this.el = el
+    this.x = x
+    this.y = y
+  }
+
+  moveRight (letter: string): void {
+    this.el.style.rotate = '0deg'
+    const nextPositionX = gameboard[this.y][this.x + 1]
+    if (nextPositionX === 1 || nextPositionX === 3) {
+      return
+    }
+    gameboard[this.y][this.x + 1] = letter
+    gameboard[this.y][this.x] = 0
+    this.x += 1
+
+    if (this.x === 20 && this.y === 10) {
+      gameboard[this.y][this.x] = 0
+      gameboard[this.y][0] = letter
+      this.x = 0
+    }
+  }
+}
+
 const pacman = new Pacman(10, 13) // 10, 13 initial position
 
 function checkForNextDirection (): void {
@@ -153,6 +190,8 @@ function renderGameboard (gameboard: Array<Array<number | string>>): void {
 
   gameboard.forEach((row, rowIndex) => {
     row.forEach((cell, cellIndex) => {
+      const left = cellIndex * widthPiece + 5
+      const top = rowIndex * heightPiece
       if (cell === 2) {
         // lest draw a circle
         ctx.beginPath()
@@ -163,8 +202,20 @@ function renderGameboard (gameboard: Array<Array<number | string>>): void {
         ctx.fill()
         ctx.closePath()
       } else if (cell === 'P') {
-        Elpacman.style.left = `${(cellIndex * widthPiece) + 5}px`
-        Elpacman.style.top = `${(rowIndex * heightPiece)}px`
+        Elpacman.style.left = `${left}px`
+        Elpacman.style.top = `${top}px`
+      } else if (cell === 'b') {
+        Elblinky.style.left = `${left}px`
+        Elblinky.style.top = `${top}px`
+      } else if (cell === 'p') {
+        Elpinky.style.left = `${left}px`
+        Elpinky.style.top = `${top}px`
+      } else if (cell === 'i') {
+        Elinky.style.left = `${left}px`
+        Elinky.style.top = `${top}px`
+      } else if (cell === 'c') {
+        Elclyde.style.left = `${left}px`
+        Elclyde.style.top = `${top}px`
       }
     })
   })
