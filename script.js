@@ -1,4 +1,5 @@
-"use strict";
+import { followTheGoal } from './routeAlgorithm.js';
+followTheGoal({ x: 0, y: 0 }, 'right');
 const canvas = document.querySelector('canvas');
 const canvasContainer = document.querySelector('div');
 const ctx = canvas.getContext('2d');
@@ -6,7 +7,7 @@ const Elpacman = document.querySelector('#pacman');
 // 2 indicates that theres a coin for pacman
 // 0 indicates empty filed
 // 1 indicates a wall
-const gameboard = [
+export const gameboard = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
     [1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1],
@@ -35,12 +36,16 @@ canvas.width = canvasContainer.clientWidth;
 canvas.height = canvasContainer.clientHeight;
 const config = {
     pacmanSpeed: 150, // ms to move one block
-    ghostSpeed: 10,
     widthPice: canvas.width / gameboard[0].length,
     heightPice: canvas.height / gameboard.length,
     pacmanDirection: 'right',
     pacmanNextDirection: 'right'
 };
+// const ghostConfig = {
+//   ghostSpeed: 10,
+//   ghostDirection: 'right'
+// }
+// console.log(ghostConfig)
 class Pacman {
     constructor(x, y) {
         this.x = x;
@@ -150,7 +155,6 @@ function renderGameboard(gameboard) {
         });
     });
 }
-renderGameboard(gameboard);
 setInterval(() => {
     if (config.pacmanDirection === 'right')
         pacman.moveRight();
