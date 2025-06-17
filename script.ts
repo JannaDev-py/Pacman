@@ -1,6 +1,4 @@
 import { followTheGoal } from './routeAlgorithm.js'
-followTheGoal({ x: 0, y: 0 }, 'right')
-
 const canvas = document.querySelector('canvas') as HTMLCanvasElement
 const canvasContainer = document.querySelector('div') as HTMLDivElement
 const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
@@ -188,3 +186,5 @@ document.addEventListener('keydown', (event) => {
   else if (key === 'ArrowUp') config.pacmanNextDirection = 'up'
   else if (key === 'ArrowDown') config.pacmanNextDirection = 'down'
 })
+
+followTheGoal(gameboard, { x: 10, y: 13 }, 'right')

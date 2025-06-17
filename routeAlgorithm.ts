@@ -1,5 +1,5 @@
 export function followTheGoal (
-  // gameboard: Array<Array<number | string>>,
+  gameboard: Array<Array<number | string>>,
   // goal: { x: number, y: number },
   currentPosition: { x: number, y: number },
   currentDirection: string): string {
@@ -31,5 +31,16 @@ export function followTheGoal (
     return undefined
   })
 
+  // now lets see if we can go to the posible moves
+  const posibleMovesOnGameboard = posibleMovesCordinates.filter((move) => {
+    if (move !== undefined) {
+      if (gameboard[move.y][move.x] !== 1) {
+        return move.direction
+      }
+    }
+    return undefined
+  })
+
+  console.log(posibleMovesOnGameboard)
   return 'hola'
 }
