@@ -1,6 +1,6 @@
 export function followTheGoal (
   gameboard: Array<Array<number | string>>,
-  // goal: { x: number, y: number },
+  goal: { x: number, y: number },
   currentPosition: { x: number, y: number },
   currentDirection: string): string {
   // ghost can go back so lest get the posible moves
@@ -35,15 +35,27 @@ export function followTheGoal (
   const posibleMovesOnGameboard = posibleMovesCordinates.map((move) => {
     if (move !== undefined) {
       if (gameboard[move.y][move.x] !== 1) {
-        const tempMove = move.direction
-        return tempMove
+        return move
       }
     }
     return undefined
   }).filter(Boolean)
 
   if (posibleMovesOnGameboard.length === 1) {
-    return posibleMovesOnGameboard[0] as string
+    return (posibleMovesOnGameboard[0] as any).direction as string
   }
-  return 'hola'
+
+  // one we got the posible moves we can go to the goal
+  // frist lest get the distance between the posible moves and the goal
+  const distances = posibleMovesOnGameboard.map((move) => {
+    const x = Math.abs((move as any).x - goal.x)
+    const y = Math.abs((move as any).y - goal.y)
+    const distance = Math.sqrt(x * x + y * y)
+    return { direction: (move as any).direction, distance }
+  })
+
+  // lets get the move to the smallest distance
+  const nextMove = distances.reduce((min, obj) => obj.distance < min.distance ? obj : min, distances[0])
+
+  return nextMove.direction
 }
