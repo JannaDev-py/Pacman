@@ -15,12 +15,12 @@ const gameboard = [
   [1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1],
   [1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1],
   [1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1],
-  [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
-  [1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 0, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1],
+  [1, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 1],
+  [1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 3, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1],
   [2, 2, 2, 2, 2, 2, 2, 2, 1, 0, 0, 0, 1, 2, 2, 2, 2, 2, 2, 2, 2], // x = 0 y = 10, x = 21 y = 10
   [1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1],
-  [0, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 0],
-  [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 'P', 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
+  [1, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 1],
+  [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 'P', 2, 2, 2, 1, 2, 1, 0, 0, 0, 1],
   [1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1],
   [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
   [1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1],
@@ -55,7 +55,7 @@ class Pacman {
   moveRight (): void {
     Elpacman.style.rotate = '0deg'
     const nextPositionX = gameboard[this.y][this.x + 1]
-    if (nextPositionX === 1) {
+    if (nextPositionX === 1 || nextPositionX === 3) {
       return
     }
     gameboard[this.y][this.x + 1] = 'P'
@@ -71,8 +71,8 @@ class Pacman {
 
   moveLeft (): void {
     Elpacman.style.rotate = '180deg'
-    const nextPositionX = gameboard[this.y][this.x - 1]
-    if (nextPositionX === 1) {
+    const nextPosition = gameboard[this.y][this.x - 1]
+    if (nextPosition === 1 || nextPosition === 3) {
       return
     }
     gameboard[this.y][this.x - 1] = 'P'
@@ -82,14 +82,14 @@ class Pacman {
     if (this.x === 0 && this.y === 10) {
       gameboard[this.y][this.x] = 0
       gameboard[this.y][20] = 'P'
-      this.x = 21
+      this.x = 20
     }
   }
 
   moveUp (): void {
     Elpacman.style.rotate = '270deg'
-    const nextPositionX = gameboard[this.y - 1][this.x]
-    if (nextPositionX === 1) {
+    const nextPosition = gameboard[this.y - 1][this.x]
+    if (nextPosition === 1 || nextPosition === 3) {
       return
     }
     gameboard[this.y - 1][this.x] = 'P'
@@ -99,8 +99,8 @@ class Pacman {
 
   moveDown (): void {
     Elpacman.style.rotate = '90deg'
-    const nextPositionX = gameboard[this.y + 1][this.x]
-    if (nextPositionX === 1) {
+    const nextPosition = gameboard[this.y + 1][this.x]
+    if (nextPosition === 1 || nextPosition === 3) {
       return
     }
     gameboard[this.y + 1][this.x] = 'P'
@@ -113,19 +113,19 @@ const pacman = new Pacman(10, 13) // 10, 13 initial position
 
 function checkForNextDirection (): void {
   if (config.pacmanNextDirection === 'right') {
-    if (gameboard[pacman.y][pacman.x + 1] !== 1) {
+    if (gameboard[pacman.y][pacman.x + 1] !== 1 && gameboard[pacman.y][pacman.x + 1] !== 3) {
       config.pacmanDirection = 'right'
     }
   } else if (config.pacmanNextDirection === 'left') {
-    if (gameboard[pacman.y][pacman.x - 1] !== 1) {
+    if (gameboard[pacman.y][pacman.x - 1] !== 1 && gameboard[pacman.y][pacman.x - 1] !== 3) {
       config.pacmanDirection = 'left'
     }
   } else if (config.pacmanNextDirection === 'up') {
-    if (gameboard[pacman.y - 1][pacman.x] !== 1) {
+    if (gameboard[pacman.y - 1][pacman.x] !== 1 && gameboard[pacman.y - 1][pacman.x] !== 3) {
       config.pacmanDirection = 'up'
     }
   } else if (config.pacmanNextDirection === 'down') {
-    if (gameboard[pacman.y + 1][pacman.x] !== 1) {
+    if (gameboard[pacman.y + 1][pacman.x] !== 1 && gameboard[pacman.y + 1][pacman.x] !== 3) {
       config.pacmanDirection = 'down'
     }
   }
