@@ -1,7 +1,18 @@
 export function followThetarget(gameboard, target, currentPosition, currentDirection) {
     // ghost can go back so lest get the posible moves
     let posibleMoves = ['up', 'left', 'down', 'right'];
-    posibleMoves = posibleMoves.filter((move) => { return move !== currentDirection; });
+    if (currentDirection === 'up') {
+        posibleMoves = posibleMoves.filter((move) => { return move !== 'down'; });
+    }
+    else if (currentDirection === 'down') {
+        posibleMoves = posibleMoves.filter((move) => { return move !== 'up'; });
+    }
+    else if (currentDirection === 'left') {
+        posibleMoves = posibleMoves.filter((move) => { return move !== 'right'; });
+    }
+    else if (currentDirection === 'right') {
+        posibleMoves = posibleMoves.filter((move) => { return move !== 'left'; });
+    }
     let posibleMovesCordinates = [
         { direction: 'up', x: currentPosition.x, y: currentPosition.y - 1 },
         { direction: 'left', x: currentPosition.x - 1, y: currentPosition.y },

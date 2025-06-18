@@ -51,6 +51,13 @@ canvas.width = canvasContainer.clientWidth;
 canvas.height = canvasContainer.clientHeight;
 const config = {
     pacmanSpeed: 150, // ms to move one block
+    ghostSpeed: 300,
+    ghostDirections: {
+        blinky: '',
+        pinky: '',
+        inky: '',
+        clyde: ''
+    },
     widthPice: canvas.width / gameboard[0].length,
     heightPice: canvas.height / gameboard.length,
     pacmanDirection: 'right',
@@ -122,7 +129,7 @@ class Ghost {
     moveRight() {
         this.el.style.rotate = '0deg';
         const nextPositionX = gameboard[this.y][this.x + 1];
-        if (nextPositionX === 1 || nextPositionX === 3) {
+        if (nextPositionX === 1) {
             return;
         }
         gameboard[this.y][this.x + 1] = this.letter;
@@ -137,7 +144,7 @@ class Ghost {
     moveLeft() {
         this.el.style.rotate = '180deg';
         const nextPosition = gameboard[this.y][this.x - 1];
-        if (nextPosition === 1 || nextPosition === 3) {
+        if (nextPosition === 1) {
             return;
         }
         gameboard[this.y][this.x - 1] = this.letter;
@@ -152,7 +159,7 @@ class Ghost {
     moveUp() {
         this.el.style.rotate = '270deg';
         const nextPosition = gameboard[this.y - 1][this.x];
-        if (nextPosition === 1 || nextPosition === 3) {
+        if (nextPosition === 1) {
             return;
         }
         gameboard[this.y - 1][this.x] = this.letter;
@@ -160,14 +167,28 @@ class Ghost {
         this.y -= 1;
     }
     moveDown() {
-        Elpacman.style.rotate = '90deg';
+        this.el.style.rotate = '90deg';
         const nextPosition = gameboard[this.y + 1][this.x];
-        if (nextPosition === 1 || nextPosition === 3) {
+        if (nextPosition === 1) {
             return;
         }
         gameboard[this.y + 1][this.x] = this.letter;
         gameboard[this.y][this.x] = 0;
         this.y += 1;
+    }
+    move(move) {
+        if (move === 'right') {
+            this.moveRight();
+        }
+        else if (move === 'left') {
+            this.moveLeft();
+        }
+        else if (move === 'up') {
+            this.moveUp();
+        }
+        else if (move === 'down') {
+            this.moveDown();
+        }
     }
 }
 const pacman = new Pacman(startPositions.pacman.x, startPositions.pacman.y); // 10, 13 initial position
@@ -261,6 +282,13 @@ setInterval(() => {
     renderGameboard(gameboard);
     checkForNextDirection();
 }, config.pacmanSpeed);
+setInterval(() => {
+    const blinky = ghosts[0];
+    const blinkyDirection = followThetarget(gameboard, { x: pacman.x, y: pacman.y }, { x: blinky.x, y: blinky.y }, config.ghostDirections.blinky);
+    config.ghostDirections.blinky = blinkyDirection;
+    blinky.move(blinkyDirection);
+    renderGameboard(gameboard);
+}, config.ghostSpeed);
 document.addEventListener('keydown', (event) => {
     const key = event.key;
     if (key === 'ArrowRight')
@@ -272,4 +300,3 @@ document.addEventListener('keydown', (event) => {
     else if (key === 'ArrowDown')
         config.pacmanNextDirection = 'down';
 });
-console.log(followThetarget(gameboard, { x: 10, y: 13 }, { x: 10, y: 17 }, 'up'));
