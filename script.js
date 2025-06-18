@@ -52,6 +52,7 @@ canvas.height = canvasContainer.clientHeight;
 const config = {
     pacmanSpeed: 150, // ms to move one block
     ghostSpeed: 250,
+    pacmanLives: 3,
     ghostDirections: {
         blinky: '',
         pinky: '',
@@ -133,6 +134,9 @@ class Ghost {
         if (nextPosition === 1) {
             return;
         }
+        else if (nextPosition === 'P') {
+            config.pacmanLives -= 1;
+        }
         gameboard[this.y][this.x + 1] = this.letter;
         gameboard[this.y][this.x] = this.previousState;
         this.previousState = nextPosition;
@@ -148,6 +152,9 @@ class Ghost {
         const nextPosition = gameboard[this.y][this.x - 1];
         if (nextPosition === 1) {
             return;
+        }
+        else if (nextPosition === 'P') {
+            config.pacmanLives -= 1;
         }
         gameboard[this.y][this.x - 1] = this.letter;
         gameboard[this.y][this.x] = this.previousState;
@@ -165,6 +172,9 @@ class Ghost {
         if (nextPosition === 1) {
             return;
         }
+        else if (nextPosition === 'P') {
+            config.pacmanLives -= 1;
+        }
         gameboard[this.y - 1][this.x] = this.letter;
         gameboard[this.y][this.x] = this.previousState;
         this.previousState = nextPosition;
@@ -175,6 +185,9 @@ class Ghost {
         const nextPosition = gameboard[this.y + 1][this.x];
         if (nextPosition === 1) {
             return;
+        }
+        else if (nextPosition === 'P') {
+            config.pacmanLives -= 1;
         }
         gameboard[this.y + 1][this.x] = this.letter;
         gameboard[this.y][this.x] = this.previousState;
