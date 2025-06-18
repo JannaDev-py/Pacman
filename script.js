@@ -51,7 +51,7 @@ canvas.width = canvasContainer.clientWidth;
 canvas.height = canvasContainer.clientHeight;
 const config = {
     pacmanSpeed: 150, // ms to move one block
-    ghostSpeed: 300,
+    ghostSpeed: 250,
     ghostDirections: {
         blinky: '',
         pinky: '',
@@ -125,15 +125,17 @@ class Ghost {
         this.x = x;
         this.y = y;
         this.letter = letter;
+        this.previousState = 0;
     }
     moveRight() {
         this.el.style.rotate = '0deg';
-        const nextPositionX = gameboard[this.y][this.x + 1];
-        if (nextPositionX === 1) {
+        const nextPosition = gameboard[this.y][this.x + 1];
+        if (nextPosition === 1) {
             return;
         }
         gameboard[this.y][this.x + 1] = this.letter;
-        gameboard[this.y][this.x] = 0;
+        gameboard[this.y][this.x] = this.previousState;
+        this.previousState = nextPosition;
         this.x += 1;
         if (this.x === 20 && this.y === 10) {
             gameboard[this.y][this.x] = 0;
@@ -148,7 +150,8 @@ class Ghost {
             return;
         }
         gameboard[this.y][this.x - 1] = this.letter;
-        gameboard[this.y][this.x] = 0;
+        gameboard[this.y][this.x] = this.previousState;
+        this.previousState = nextPosition;
         this.x -= 1;
         if (this.x === 0 && this.y === 10) {
             gameboard[this.y][this.x] = 0;
@@ -163,7 +166,8 @@ class Ghost {
             return;
         }
         gameboard[this.y - 1][this.x] = this.letter;
-        gameboard[this.y][this.x] = 0;
+        gameboard[this.y][this.x] = this.previousState;
+        this.previousState = nextPosition;
         this.y -= 1;
     }
     moveDown() {
@@ -173,7 +177,8 @@ class Ghost {
             return;
         }
         gameboard[this.y + 1][this.x] = this.letter;
-        gameboard[this.y][this.x] = 0;
+        gameboard[this.y][this.x] = this.previousState;
+        this.previousState = nextPosition;
         this.y += 1;
     }
     move(move) {
@@ -287,7 +292,6 @@ setInterval(() => {
     const blinkyDirection = followThetarget(gameboard, { x: pacman.x, y: pacman.y }, { x: blinky.x, y: blinky.y }, config.ghostDirections.blinky);
     config.ghostDirections.blinky = blinkyDirection;
     blinky.move(blinkyDirection);
-    renderGameboard(gameboard);
 }, config.ghostSpeed);
 document.addEventListener('keydown', (event) => {
     const key = event.key;
