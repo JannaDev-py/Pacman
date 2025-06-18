@@ -238,6 +238,7 @@ function renderGameboard(gameboard) {
     const widthPiece = config.widthPice;
     const heightPiece = config.heightPice;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    requestAnimationFrame(() => { renderGameboard(gameboard); });
     gameboard.forEach((row, rowIndex) => {
         row.forEach((cell, cellIndex) => {
             const left = cellIndex * widthPiece + 5;
@@ -284,7 +285,6 @@ setInterval(() => {
         pacman.moveUp();
     if (config.pacmanDirection === 'down')
         pacman.moveDown();
-    renderGameboard(gameboard);
     checkForNextDirection();
 }, config.pacmanSpeed);
 setInterval(() => {
@@ -293,6 +293,7 @@ setInterval(() => {
     config.ghostDirections.blinky = blinkyDirection;
     blinky.move(blinkyDirection);
 }, config.ghostSpeed);
+renderGameboard(gameboard);
 document.addEventListener('keydown', (event) => {
     const key = event.key;
     if (key === 'ArrowRight')
