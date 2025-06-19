@@ -330,8 +330,31 @@ setTimeout(() => {
     setTimeout(() => { pinky.moveUp(); }, config.ghostSpeed.pinky);
     setTimeout(() => { pinky.moveUp(); }, config.ghostSpeed.pinky * 2);
     setTimeout(() => { pinky.moveUp(); }, config.ghostSpeed.pinky * 3);
-    setInterval(() => {
-    });
+    setTimeout(() => {
+        setInterval(() => {
+            const pacmanDirection = config.pacmanDirection;
+            if (pacmanDirection === 'right') {
+                const nextDirection = followThetarget(gameboard, { x: pacman.x + 4, y: pacman.y }, { x: pinky.x, y: pinky.y }, config.ghostDirections.pinky);
+                config.ghostDirections.pinky = nextDirection;
+                pinky.move(nextDirection);
+            }
+            else if (pacmanDirection === 'left') {
+                const nextDirection = followThetarget(gameboard, { x: pacman.x - 4, y: pacman.y }, { x: pinky.x, y: pinky.y }, config.ghostDirections.pinky);
+                config.ghostDirections.pinky = nextDirection;
+                pinky.move(nextDirection);
+            }
+            else if (pacmanDirection === 'up') {
+                const nextDirection = followThetarget(gameboard, { x: pacman.x, y: pacman.y - 4 }, { x: pinky.x, y: pinky.y }, config.ghostDirections.pinky);
+                config.ghostDirections.pinky = nextDirection;
+                pinky.move(nextDirection);
+            }
+            else if (pacmanDirection === 'down') {
+                const nextDirection = followThetarget(gameboard, { x: pacman.x, y: pacman.y + 4 }, { x: pinky.x, y: pinky.y }, config.ghostDirections.pinky);
+                config.ghostDirections.pinky = nextDirection;
+                pinky.move(nextDirection);
+            }
+        }, config.ghostSpeed.pinky);
+    }, config.ghostSpeed.pinky * 4);
 }, 1500);
 // rutine for inky
 setTimeout(() => {
