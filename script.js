@@ -253,12 +253,16 @@ ghosts[0].moveRight();
 renderGameboard(gameboard);
 function checkForNextDirection() {
     if (config.pacmanNextDirection === 'right') {
-        if (gameboard[pacman.y][pacman.x + 1] !== 1 && gameboard[pacman.y][pacman.x + 1] !== 3) {
+        if (gameboard[pacman.y][pacman.x + 1] !== 1 &&
+            gameboard[pacman.y][pacman.x + 1] !== 3 &&
+            pacman.x + 1 < gameboard[0].length) {
             config.pacmanDirection = 'right';
         }
     }
     else if (config.pacmanNextDirection === 'left') {
-        if (gameboard[pacman.y][pacman.x - 1] !== 1 && gameboard[pacman.y][pacman.x - 1] !== 3) {
+        if (gameboard[pacman.y][pacman.x - 1] !== 1 &&
+            gameboard[pacman.y][pacman.x - 1] !== 3 &&
+            pacman.x - 1 >= 0) {
             config.pacmanDirection = 'left';
         }
     }
