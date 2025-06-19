@@ -60,10 +60,10 @@ canvas.height = canvasContainer.clientHeight;
 const config = {
     pacmanSpeed: 150, // ms to move one block
     ghostSpeed: {
-        blinky: 250,
-        pinky: 250,
-        inky: 250,
-        clyde: 250
+        blinky: 200,
+        pinky: 200,
+        inky: 200,
+        clyde: 200
     },
     pacmanLives: 3,
     ghostDirections: {
@@ -188,7 +188,7 @@ class Ghost {
         if (this.x === gameboard[0].length - 1 && this.y === 14) {
             gameboard[this.y][this.x] = 0;
             this.cleanGameboard();
-            gameboard[this.y][0] = 'P';
+            gameboard[this.y][0] = this.letter;
             this.x = 0;
         }
     }
@@ -209,7 +209,7 @@ class Ghost {
         if (this.x === 0 && this.y === 14) {
             gameboard[this.y][this.x] = 0;
             this.cleanGameboard();
-            gameboard[this.y][gameboard[0].length - 1] = 'P';
+            gameboard[this.y][gameboard[0].length - 1] = this.letter;
             this.x = gameboard[0].length - 1;
         }
     }
@@ -466,6 +466,7 @@ setTimeout(() => {
     setTimeout(() => { clyde.moveLeft(); }, config.ghostSpeed.clyde);
     setTimeout(() => { clyde.moveUp(); }, config.ghostSpeed.clyde * 2);
     setTimeout(() => { clyde.moveUp(); }, config.ghostSpeed.clyde * 3);
+    setTimeout(() => { clyde.moveUp(); }, config.ghostSpeed.clyde * 4);
 }, 5000);
 renderGameboard(gameboard);
 document.addEventListener('keydown', (event) => {
