@@ -82,17 +82,29 @@ class Pacman {
         this.x = x;
         this.y = y;
     }
+    cleanGameboard() {
+        gameboard.forEach((row, rowIndex) => {
+            row.forEach((cell, cellIndex) => {
+                if (cell === 'P') {
+                    gameboard[rowIndex][cellIndex] = 0;
+                }
+            });
+        });
+        config.pacmanLives = 3;
+    }
     moveRight() {
         Elpacman.style.rotate = '0deg';
         const nextPositionX = gameboard[this.y][this.x + 1];
         if (nextPositionX === 1 || nextPositionX === 3) {
             return;
         }
+        this.cleanGameboard();
         gameboard[this.y][this.x + 1] = 'P';
         gameboard[this.y][this.x] = 0;
         this.x += 1;
         if (this.x === gameboard[0].length - 1 && this.y === 14) {
             gameboard[this.y][this.x] = 0;
+            this.cleanGameboard();
             gameboard[this.y][0] = 'P';
             this.x = 0;
         }
@@ -103,11 +115,13 @@ class Pacman {
         if (nextPosition === 1 || nextPosition === 3) {
             return;
         }
+        this.cleanGameboard();
         gameboard[this.y][this.x - 1] = 'P';
         gameboard[this.y][this.x] = 0;
         this.x -= 1;
         if (this.x === 0 && this.y === 14) {
             gameboard[this.y][this.x] = 0;
+            this.cleanGameboard();
             gameboard[this.y][gameboard[0].length - 1] = 'P';
             this.x = gameboard[0].length - 1;
         }
@@ -118,6 +132,7 @@ class Pacman {
         if (nextPosition === 1 || nextPosition === 3) {
             return;
         }
+        this.cleanGameboard();
         gameboard[this.y - 1][this.x] = 'P';
         gameboard[this.y][this.x] = 0;
         this.y -= 1;
@@ -128,6 +143,7 @@ class Pacman {
         if (nextPosition === 1 || nextPosition === 3) {
             return;
         }
+        this.cleanGameboard();
         gameboard[this.y + 1][this.x] = 'P';
         gameboard[this.y][this.x] = 0;
         this.y += 1;
