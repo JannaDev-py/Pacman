@@ -209,7 +209,8 @@ class Ghost {
     this.x += 1
 
     if (this.x === gameboard[0].length - 1 && this.y === 14) {
-      gameboard[this.y][this.x] = 0
+      gameboard[this.y][this.x] = this.previousState
+      this.previousState = gameboard[this.y][0]
       this.cleanGameboard()
       gameboard[this.y][0] = this.letter
       this.x = 0
@@ -231,7 +232,8 @@ class Ghost {
     this.x -= 1
 
     if (this.x === 0 && this.y === 14) {
-      gameboard[this.y][this.x] = 0
+      gameboard[this.y][this.x] = this.previousState
+      this.previousState = gameboard[this.y][gameboard[0].length - 1]
       this.cleanGameboard()
       gameboard[this.y][gameboard[0].length - 1] = this.letter
       this.x = gameboard[0].length - 1
