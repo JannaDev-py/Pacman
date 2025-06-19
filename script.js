@@ -140,7 +140,12 @@ class Pacman {
     moveDown() {
         Elpacman.style.rotate = '90deg';
         const nextPosition = gameboard[this.y + 1][this.x];
-        if (nextPosition === 1 || nextPosition === 3) {
+        if (nextPosition === 1 ||
+            nextPosition === 3 ||
+            nextPosition === 'P' ||
+            nextPosition === 'b' ||
+            nextPosition === 'i' ||
+            nextPosition === 'c') {
             return;
         }
         this.cleanGameboard();
@@ -227,7 +232,12 @@ class Ghost {
     moveDown() {
         this.el.style.rotate = '90deg';
         const nextPosition = gameboard[this.y + 1][this.x];
-        if (nextPosition === 1 || nextPosition === 3) {
+        if (nextPosition === 1 ||
+            nextPosition === 3 ||
+            nextPosition === 'P' ||
+            nextPosition === 'b' ||
+            nextPosition === 'i' ||
+            nextPosition === 'c') {
             return;
         }
         else if (nextPosition === 'P') {
@@ -282,7 +292,12 @@ function checkForNextDirection() {
         }
     }
     else if (config.pacmanNextDirection === 'down') {
-        if (gameboard[pacman.y + 1][pacman.x] !== 1 && gameboard[pacman.y + 1][pacman.x] !== 3) {
+        if (gameboard[pacman.y + 1][pacman.x] !== 1 &&
+            gameboard[pacman.y + 1][pacman.x] !== 3 &&
+            gameboard[pacman.y + 1][pacman.x] !== 'P' &&
+            gameboard[pacman.y + 1][pacman.x] !== 'b' &&
+            gameboard[pacman.y + 1][pacman.x] !== 'i' &&
+            gameboard[pacman.y + 1][pacman.x] !== 'c') {
             config.pacmanDirection = 'down';
         }
     }
