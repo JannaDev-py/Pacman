@@ -347,6 +347,15 @@ function renderGameboard(gameboard) {
                 Elclyde.style.left = `${left}px`;
                 Elclyde.style.top = `${top}px`;
             }
+            else if (cell === 'O') {
+                ctx.beginPath();
+                const x = (cellIndex * widthPiece) + (widthPiece / 2);
+                const y = (rowIndex * heightPiece) + (heightPiece / 2);
+                ctx.arc(x, y, widthPiece / 5, 0, 2 * Math.PI);
+                ctx.fillStyle = '#3f7';
+                ctx.fill();
+                ctx.closePath();
+            }
         });
     });
 }
@@ -445,7 +454,7 @@ setTimeout(() => {
                 targetX = gameboard[0].length - 1;
             if (targetY > gameboard.length - 1)
                 targetY = gameboard.length - 1;
-            const nextDirection = followThetarget(gameboard, { x: pacman.x, y: pacman.y }, { x: targetX, y: targetY }, config.ghostDirections.inky);
+            const nextDirection = followThetarget(gameboard, { x: targetX, y: targetY }, { x: inky.x, y: inky.y }, config.ghostDirections.inky);
             config.ghostDirections.inky = nextDirection;
             inky.move(nextDirection);
         }, config.ghostSpeed.inky);
