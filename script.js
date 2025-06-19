@@ -174,9 +174,9 @@ class Ghost {
         gameboard[this.y][this.x] = this.previousState;
         this.previousState = nextPosition;
         this.x += 1;
-        if (this.x === 0 && this.y === 15) {
+        if (this.x === gameboard[0].length - 1 && this.y === 14) {
             gameboard[this.y][this.x] = 0;
-            gameboard[this.y][0] = this.letter;
+            gameboard[this.y][0] = 'P';
             this.x = 0;
         }
     }
@@ -193,9 +193,9 @@ class Ghost {
         gameboard[this.y][this.x] = this.previousState;
         this.previousState = nextPosition;
         this.x -= 1;
-        if (this.x === gameboard[0].length - 1 && this.y === 15) {
+        if (this.x === 0 && this.y === 14) {
             gameboard[this.y][this.x] = 0;
-            gameboard[this.y][gameboard[0].length - 1] = this.letter;
+            gameboard[this.y][gameboard[0].length - 1] = 'P';
             this.x = gameboard[0].length - 1;
         }
     }
