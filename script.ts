@@ -346,16 +346,27 @@ setTimeout(() => {
   setTimeout(() => { pinky.moveUp() }, config.ghostSpeed.pinky)
   setTimeout(() => { pinky.moveUp() }, config.ghostSpeed.pinky * 2)
   setTimeout(() => { pinky.moveUp() }, config.ghostSpeed.pinky * 3)
+  setInterval(() => {
+
+  })
 }, 1500)
 
 // rutine for inky
-setTimeout(async () => {
+setTimeout(() => {
   const inky = ghosts[2]
-  await setTimeout(() => { inky.moveRight() }, config.ghostSpeed.inky)
-  await setTimeout(() => { inky.moveRight() }, config.ghostSpeed.inky * 2)
-  await setTimeout(() => { inky.moveUp() }, config.ghostSpeed.inky * 3)
-  await setTimeout(() => { inky.moveUp() }, config.ghostSpeed.inky * 4)
+  setTimeout(() => { inky.moveRight() }, config.ghostSpeed.inky)
+  setTimeout(() => { inky.moveRight() }, config.ghostSpeed.inky * 2)
+  setTimeout(() => { inky.moveUp() }, config.ghostSpeed.inky * 3)
+  setTimeout(() => { inky.moveUp() }, config.ghostSpeed.inky * 4)
 }, 3000)
+
+// clyde rutine
+setTimeout(() => {
+  const clyde = ghosts[3]
+  setTimeout(() => { clyde.moveLeft() }, config.ghostSpeed.clyde)
+  setTimeout(() => { clyde.moveUp() }, config.ghostSpeed.clyde * 2)
+  setTimeout(() => { clyde.moveUp() }, config.ghostSpeed.clyde * 3)
+}, 5000)
 
 renderGameboard(gameboard)
 

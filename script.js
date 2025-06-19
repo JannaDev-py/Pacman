@@ -1,12 +1,3 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 import { followThetarget } from './routeAlgorithm.js';
 const canvas = document.querySelector('canvas');
 const canvasContainer = document.querySelector('div');
@@ -339,15 +330,24 @@ setTimeout(() => {
     setTimeout(() => { pinky.moveUp(); }, config.ghostSpeed.pinky);
     setTimeout(() => { pinky.moveUp(); }, config.ghostSpeed.pinky * 2);
     setTimeout(() => { pinky.moveUp(); }, config.ghostSpeed.pinky * 3);
+    setInterval(() => {
+    });
 }, 1500);
 // rutine for inky
-setTimeout(() => __awaiter(void 0, void 0, void 0, function* () {
+setTimeout(() => {
     const inky = ghosts[2];
-    yield setTimeout(() => { inky.moveRight(); }, config.ghostSpeed.inky);
-    yield setTimeout(() => { inky.moveRight(); }, config.ghostSpeed.inky * 2);
-    yield setTimeout(() => { inky.moveUp(); }, config.ghostSpeed.inky * 3);
-    yield setTimeout(() => { inky.moveUp(); }, config.ghostSpeed.inky * 4);
-}), 3000);
+    setTimeout(() => { inky.moveRight(); }, config.ghostSpeed.inky);
+    setTimeout(() => { inky.moveRight(); }, config.ghostSpeed.inky * 2);
+    setTimeout(() => { inky.moveUp(); }, config.ghostSpeed.inky * 3);
+    setTimeout(() => { inky.moveUp(); }, config.ghostSpeed.inky * 4);
+}, 3000);
+// clyde rutine
+setTimeout(() => {
+    const clyde = ghosts[3];
+    setTimeout(() => { clyde.moveLeft(); }, config.ghostSpeed.clyde);
+    setTimeout(() => { clyde.moveUp(); }, config.ghostSpeed.clyde * 2);
+    setTimeout(() => { clyde.moveUp(); }, config.ghostSpeed.clyde * 3);
+}, 5000);
 renderGameboard(gameboard);
 document.addEventListener('keydown', (event) => {
     const key = event.key;
