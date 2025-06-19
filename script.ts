@@ -425,17 +425,43 @@ setTimeout(() => {
 // rutine for inky
 setTimeout(() => {
   const inky = ghosts[2]
-  // const blinky = ghosts[0]
+  const blinky = ghosts[0]
   setTimeout(() => { inky.moveRight() }, config.ghostSpeed.inky)
   setTimeout(() => { inky.moveRight() }, config.ghostSpeed.inky * 2)
   setTimeout(() => { inky.moveUp() }, config.ghostSpeed.inky * 3)
   setTimeout(() => { inky.moveUp() }, config.ghostSpeed.inky * 4)
+  setTimeout(() => { inky.moveUp() }, config.ghostSpeed.inky * 5)
   setTimeout(() => {
     setInterval(() => {
-      // const x = Math.abs(pacman.x - blinky.x)
-      // console.log(x)
+      let secondBlockPacman: { x: number, y: number }
+
+      if (config.pacmanDirection === 'right') {
+        secondBlockPacman = { x: pacman.x + 2, y: pacman.y }
+      } else if (config.pacmanDirection === 'left') {
+        secondBlockPacman = { x: pacman.x - 2, y: pacman.y }
+      } else if (config.pacmanDirection === 'up') {
+        secondBlockPacman = { x: pacman.x, y: pacman.y - 2 }
+      } else if (config.pacmanDirection === 'down') {
+        secondBlockPacman = { x: pacman.x, y: pacman.y + 2 }
+      } else {
+        secondBlockPacman = { x: pacman.x, y: pacman.y }
+      }
+
+      const distanceX = Math.abs(secondBlockPacman.x - blinky.x)
+      const distanceY = Math.abs(secondBlockPacman.y - blinky.y)
+
+      let targetX = (secondBlockPacman.x > blinky.x) ? blinky.x - distanceX : blinky.x + distanceX
+      let targetY = (secondBlockPacman.y > blinky.y) ? blinky.y - distanceY : blinky.y + distanceY
+      if (targetX < 0) targetX = 0
+      if (targetY < 0) targetY = 0
+      if (targetX > gameboard[0].length - 1) targetX = gameboard[0].length - 1
+      if (targetY > gameboard.length - 1) targetY = gameboard.length - 1
+
+      const nextDirection = followThetarget(gameboard, { x: pacman.x, y: pacman.y }, { x: targetX, y: targetY }, config.ghostDirections.inky)
+      config.ghostDirections.inky = nextDirection
+      inky.move(nextDirection)
     }, config.ghostSpeed.inky)
-  })
+  }, config.ghostSpeed.inky * 6)
 }, 3000)
 
 // clyde rutine
