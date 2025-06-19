@@ -64,6 +64,6 @@ export function followThetarget (
 
   // lets get the move to the smallest distance
   const nextMove = distances.reduce((min, obj) => obj.distance < min.distance ? obj : min, distances[0])
-
+  if (nextMove === undefined) return currentDirection
   return nextMove.direction
 }

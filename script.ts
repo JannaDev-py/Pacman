@@ -192,7 +192,6 @@ class Ghost {
         }
       })
     })
-    config.pacmanLives = 3
   }
 
   moveRight (): void {
@@ -259,7 +258,7 @@ class Ghost {
     const nextPosition = gameboard[this.y + 1][this.x]
     if (nextPosition === 1 ||
       nextPosition === 3 ||
-      nextPosition === 'P' ||
+      nextPosition === 'p' ||
       nextPosition === 'b' ||
       nextPosition === 'i' ||
       nextPosition === 'c') {
@@ -399,19 +398,23 @@ setTimeout(() => {
     setInterval(() => {
       const pacmanDirection = config.pacmanDirection
       if (pacmanDirection === 'right') {
-        const nextDirection = followThetarget(gameboard, { x: pacman.x + 4, y: pacman.y }, { x: pinky.x, y: pinky.y }, config.ghostDirections.pinky)
+        const pacmanX = ((pacman.x + 4) <= gameboard.length) ? gameboard.length : pacman.x + 4
+        const nextDirection = followThetarget(gameboard, { x: pacmanX, y: pacman.y }, { x: pinky.x, y: pinky.y }, config.ghostDirections.pinky)
         config.ghostDirections.pinky = nextDirection
         pinky.move(nextDirection)
       } else if (pacmanDirection === 'left') {
-        const nextDirection = followThetarget(gameboard, { x: pacman.x - 4, y: pacman.y }, { x: pinky.x, y: pinky.y }, config.ghostDirections.pinky)
+        const pacmanX = ((pacman.x - 4) <= gameboard.length) ? gameboard.length : pacman.x - 4
+        const nextDirection = followThetarget(gameboard, { x: pacmanX, y: pacman.y }, { x: pinky.x, y: pinky.y }, config.ghostDirections.pinky)
         config.ghostDirections.pinky = nextDirection
         pinky.move(nextDirection)
       } else if (pacmanDirection === 'up') {
-        const nextDirection = followThetarget(gameboard, { x: pacman.x, y: pacman.y - 4 }, { x: pinky.x, y: pinky.y }, config.ghostDirections.pinky)
+        const pacmanY = ((pacman.y - 4) <= gameboard.length) ? gameboard.length : pacman.y - 4
+        const nextDirection = followThetarget(gameboard, { x: pacman.x, y: pacmanY }, { x: pinky.x, y: pinky.y }, config.ghostDirections.pinky)
         config.ghostDirections.pinky = nextDirection
         pinky.move(nextDirection)
       } else if (pacmanDirection === 'down') {
-        const nextDirection = followThetarget(gameboard, { x: pacman.x, y: pacman.y + 4 }, { x: pinky.x, y: pinky.y }, config.ghostDirections.pinky)
+        const pacmanY = ((pacman.y + 4) >= gameboard.length) ? gameboard.length : pacman.y + 4
+        const nextDirection = followThetarget(gameboard, { x: pacman.x, y: pacmanY }, { x: pinky.x, y: pinky.y }, config.ghostDirections.pinky)
         config.ghostDirections.pinky = nextDirection
         pinky.move(nextDirection)
       }
@@ -422,10 +425,17 @@ setTimeout(() => {
 // rutine for inky
 setTimeout(() => {
   const inky = ghosts[2]
+  // const blinky = ghosts[0]
   setTimeout(() => { inky.moveRight() }, config.ghostSpeed.inky)
   setTimeout(() => { inky.moveRight() }, config.ghostSpeed.inky * 2)
   setTimeout(() => { inky.moveUp() }, config.ghostSpeed.inky * 3)
   setTimeout(() => { inky.moveUp() }, config.ghostSpeed.inky * 4)
+  setTimeout(() => {
+    setInterval(() => {
+      // const x = Math.abs(pacman.x - blinky.x)
+      // console.log(x)
+    }, config.ghostSpeed.inky)
+  })
 }, 3000)
 
 // clyde rutine
