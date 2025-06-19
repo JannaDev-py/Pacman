@@ -341,11 +341,20 @@ setTimeout(() => {
 }, 1000)
 
 // rutine for pinky
-setTimeout(async () => {
+setTimeout(() => {
   const pinky = ghosts[1]
-  await setTimeout(() => { pinky.moveUp() }, config.ghostSpeed.pinky)
-  await setTimeout(() => { pinky.moveUp() }, config.ghostSpeed.pinky)
-  await setTimeout(() => { pinky.moveUp() }, config.ghostSpeed.pinky)
+  setTimeout(() => { pinky.moveUp() }, config.ghostSpeed.pinky)
+  setTimeout(() => { pinky.moveUp() }, config.ghostSpeed.pinky * 2)
+  setTimeout(() => { pinky.moveUp() }, config.ghostSpeed.pinky * 3)
+}, 1500)
+
+// rutine for inky
+setTimeout(async () => {
+  const inky = ghosts[2]
+  await setTimeout(() => { inky.moveRight() }, config.ghostSpeed.inky)
+  await setTimeout(() => { inky.moveRight() }, config.ghostSpeed.inky * 2)
+  await setTimeout(() => { inky.moveUp() }, config.ghostSpeed.inky * 3)
+  await setTimeout(() => { inky.moveUp() }, config.ghostSpeed.inky * 4)
 }, 3000)
 
 renderGameboard(gameboard)

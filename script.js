@@ -334,11 +334,19 @@ setTimeout(() => {
     }, config.ghostSpeed.blinky);
 }, 1000);
 // rutine for pinky
-setTimeout(() => __awaiter(void 0, void 0, void 0, function* () {
+setTimeout(() => {
     const pinky = ghosts[1];
-    yield setTimeout(() => { pinky.moveUp(); }, config.ghostSpeed.pinky);
-    yield setTimeout(() => { pinky.moveUp(); }, config.ghostSpeed.pinky);
-    yield setTimeout(() => { pinky.moveUp(); }, config.ghostSpeed.pinky);
+    setTimeout(() => { pinky.moveUp(); }, config.ghostSpeed.pinky);
+    setTimeout(() => { pinky.moveUp(); }, config.ghostSpeed.pinky * 2);
+    setTimeout(() => { pinky.moveUp(); }, config.ghostSpeed.pinky * 3);
+}, 1500);
+// rutine for inky
+setTimeout(() => __awaiter(void 0, void 0, void 0, function* () {
+    const inky = ghosts[2];
+    yield setTimeout(() => { inky.moveRight(); }, config.ghostSpeed.inky);
+    yield setTimeout(() => { inky.moveRight(); }, config.ghostSpeed.inky * 2);
+    yield setTimeout(() => { inky.moveUp(); }, config.ghostSpeed.inky * 3);
+    yield setTimeout(() => { inky.moveUp(); }, config.ghostSpeed.inky * 4);
 }), 3000);
 renderGameboard(gameboard);
 document.addEventListener('keydown', (event) => {
