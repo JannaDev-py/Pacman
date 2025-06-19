@@ -164,7 +164,7 @@ class Ghost {
     moveRight() {
         this.el.style.rotate = '0deg';
         const nextPosition = gameboard[this.y][this.x + 1];
-        if (nextPosition === 1) {
+        if (nextPosition === 1 || nextPosition === 3) {
             return;
         }
         else if (nextPosition === 'P') {
@@ -183,7 +183,7 @@ class Ghost {
     moveLeft() {
         this.el.style.rotate = '180deg';
         const nextPosition = gameboard[this.y][this.x - 1];
-        if (nextPosition === 1) {
+        if (nextPosition === 1 || nextPosition === 3) {
             return;
         }
         else if (nextPosition === 'P') {
@@ -216,7 +216,7 @@ class Ghost {
     moveDown() {
         this.el.style.rotate = '90deg';
         const nextPosition = gameboard[this.y + 1][this.x];
-        if (nextPosition === 1) {
+        if (nextPosition === 1 || nextPosition === 3) {
             return;
         }
         else if (nextPosition === 'P') {
