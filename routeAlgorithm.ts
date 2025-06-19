@@ -34,7 +34,11 @@ export function followThetarget (
   interface Move { direction: string, x: number, y: number }
 
   const posibleMovesOnGameboard = posibleMovesCordinates.map((move) => {
-    if (gameboard[(move as Move).y][(move as Move).x] === 3 &&
+    if ((gameboard[(move as Move).y][(move as Move).x] === 3 ||
+        gameboard[(move as Move).y][(move as Move).x] === 'P' ||
+        gameboard[(move as Move).y][(move as Move).x] === 'b' ||
+        gameboard[(move as Move).y][(move as Move).x] === 'i' ||
+        gameboard[(move as Move).y][(move as Move).x] === 'c') &&
       (move as Move).direction === 'down') {
       return undefined
     }

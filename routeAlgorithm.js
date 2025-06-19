@@ -27,7 +27,11 @@ export function followThetarget(gameboard, target, currentPosition, currentDirec
         return undefined;
     }).filter(Boolean);
     const posibleMovesOnGameboard = posibleMovesCordinates.map((move) => {
-        if (gameboard[move.y][move.x] === 3 &&
+        if ((gameboard[move.y][move.x] === 3 ||
+            gameboard[move.y][move.x] === 'P' ||
+            gameboard[move.y][move.x] === 'b' ||
+            gameboard[move.y][move.x] === 'i' ||
+            gameboard[move.y][move.x] === 'c') &&
             move.direction === 'down') {
             return undefined;
         }
