@@ -1,3 +1,12 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 import { followThetarget } from './routeAlgorithm.js';
 const canvas = document.querySelector('canvas');
 const canvasContainer = document.querySelector('div');
@@ -59,7 +68,12 @@ canvas.width = canvasContainer.clientWidth;
 canvas.height = canvasContainer.clientHeight;
 const config = {
     pacmanSpeed: 150, // ms to move one block
-    ghostSpeed: 250,
+    ghostSpeed: {
+        blinky: 250,
+        pinky: 250,
+        inky: 250,
+        clyde: 250
+    },
     pacmanLives: 3,
     ghostDirections: {
         blinky: '',
@@ -310,12 +324,22 @@ setInterval(() => {
         pacman.moveDown();
     checkForNextDirection();
 }, config.pacmanSpeed);
-setInterval(() => {
-    const blinky = ghosts[0];
-    const blinkyDirection = followThetarget(gameboard, { x: pacman.x, y: pacman.y }, { x: blinky.x, y: blinky.y }, config.ghostDirections.blinky);
-    config.ghostDirections.blinky = blinkyDirection;
-    blinky.move(blinkyDirection);
-}, config.ghostSpeed);
+// rutine for blinky
+setTimeout(() => {
+    setInterval(() => {
+        const blinky = ghosts[0];
+        const blinkyDirection = followThetarget(gameboard, { x: pacman.x, y: pacman.y }, { x: blinky.x, y: blinky.y }, config.ghostDirections.blinky);
+        config.ghostDirections.blinky = blinkyDirection;
+        blinky.move(blinkyDirection);
+    }, config.ghostSpeed.blinky);
+}, 1000);
+// rutine for pinky
+setTimeout(() => __awaiter(void 0, void 0, void 0, function* () {
+    const pinky = ghosts[1];
+    yield setTimeout(() => { pinky.moveUp(); }, config.ghostSpeed.pinky);
+    yield setTimeout(() => { pinky.moveUp(); }, config.ghostSpeed.pinky);
+    yield setTimeout(() => { pinky.moveUp(); }, config.ghostSpeed.pinky);
+}), 3000);
 renderGameboard(gameboard);
 document.addEventListener('keydown', (event) => {
     const key = event.key;

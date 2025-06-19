@@ -64,7 +64,12 @@ canvas.height = canvasContainer.clientHeight
 
 const config = {
   pacmanSpeed: 150, // ms to move one block
-  ghostSpeed: 250,
+  ghostSpeed: {
+    blinky: 250,
+    pinky: 250,
+    inky: 250,
+    clyde: 250
+  },
   pacmanLives: 3,
   ghostDirections: {
     blinky: '',
@@ -325,12 +330,23 @@ setInterval(() => {
   checkForNextDirection()
 }, config.pacmanSpeed)
 
-setInterval(() => {
-  const blinky = ghosts[0]
-  const blinkyDirection = followThetarget(gameboard, { x: pacman.x, y: pacman.y }, { x: blinky.x, y: blinky.y }, config.ghostDirections.blinky)
-  config.ghostDirections.blinky = blinkyDirection
-  blinky.move(blinkyDirection)
-}, config.ghostSpeed)
+// rutine for blinky
+setTimeout(() => {
+  setInterval(() => {
+    const blinky = ghosts[0]
+    const blinkyDirection = followThetarget(gameboard, { x: pacman.x, y: pacman.y }, { x: blinky.x, y: blinky.y }, config.ghostDirections.blinky)
+    config.ghostDirections.blinky = blinkyDirection
+    blinky.move(blinkyDirection)
+  }, config.ghostSpeed.blinky)
+}, 1000)
+
+// rutine for pinky
+setTimeout(async () => {
+  const pinky = ghosts[1]
+  await setTimeout(() => { pinky.moveUp() }, config.ghostSpeed.pinky)
+  await setTimeout(() => { pinky.moveUp() }, config.ghostSpeed.pinky)
+  await setTimeout(() => { pinky.moveUp() }, config.ghostSpeed.pinky)
+}, 3000)
 
 renderGameboard(gameboard)
 
