@@ -192,6 +192,8 @@ class Ghost {
         }
         else if (nextPosition === 'P') {
             config.pacmanLives -= 1;
+            if (config.pacmanLives === 0)
+                resetGame();
         }
         this.cleanGameboard();
         gameboard[this.y][this.x + 1] = this.letter;
@@ -214,6 +216,8 @@ class Ghost {
         }
         else if (nextPosition === 'P') {
             config.pacmanLives -= 1;
+            if (config.pacmanLives === 0)
+                resetGame();
         }
         this.cleanGameboard();
         gameboard[this.y][this.x - 1] = this.letter;
@@ -236,6 +240,8 @@ class Ghost {
         }
         else if (nextPosition === 'P') {
             config.pacmanLives -= 1;
+            if (config.pacmanLives === 0)
+                resetGame();
         }
         this.cleanGameboard();
         gameboard[this.y - 1][this.x] = this.letter;
@@ -256,6 +262,8 @@ class Ghost {
         }
         else if (nextPosition === 'P') {
             config.pacmanLives -= 1;
+            if (config.pacmanLives === 0)
+                resetGame();
         }
         this.cleanGameboard();
         gameboard[this.y + 1][this.x] = this.letter;
@@ -382,10 +390,8 @@ function startGame() {
             pacman.moveLeft();
         else if (config.pacmanDirection === 'up')
             pacman.moveUp();
-        else if (config.pacmanDirection === 'down') {
+        else if (config.pacmanDirection === 'down')
             pacman.moveDown();
-            resetGame();
-        }
         if (config.pacmanPointsLeft === 0)
             resetGame();
         checkForNextDirection();
@@ -506,8 +512,6 @@ function startGame() {
         }, config.ghostSpeed.clyde * 5);
     }, 5000);
 }
-startGame();
-renderGameboard(gameboard);
 document.addEventListener('keydown', (event) => {
     const key = event.key;
     if (key === 'ArrowRight')
@@ -522,3 +526,5 @@ document.addEventListener('keydown', (event) => {
 function resetGame() {
     window.location.reload();
 }
+startGame();
+renderGameboard(gameboard);

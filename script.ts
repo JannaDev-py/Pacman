@@ -210,6 +210,7 @@ class Ghost {
       return
     } else if (nextPosition === 'P') {
       config.pacmanLives -= 1
+      if (config.pacmanLives === 0) resetGame()
     }
     this.cleanGameboard()
     gameboard[this.y][this.x + 1] = this.letter
@@ -233,6 +234,7 @@ class Ghost {
       return
     } else if (nextPosition === 'P') {
       config.pacmanLives -= 1
+      if (config.pacmanLives === 0) resetGame()
     }
     this.cleanGameboard()
     gameboard[this.y][this.x - 1] = this.letter
@@ -256,6 +258,7 @@ class Ghost {
       return
     } else if (nextPosition === 'P') {
       config.pacmanLives -= 1
+      if (config.pacmanLives === 0) resetGame()
     }
     this.cleanGameboard()
     gameboard[this.y - 1][this.x] = this.letter
@@ -276,6 +279,7 @@ class Ghost {
       return
     } else if (nextPosition === 'P') {
       config.pacmanLives -= 1
+      if (config.pacmanLives === 0) resetGame()
     }
     this.cleanGameboard()
     gameboard[this.y + 1][this.x] = this.letter
@@ -394,10 +398,7 @@ function startGame (): void {
     if (config.pacmanDirection === 'right') pacman.moveRight()
     else if (config.pacmanDirection === 'left') pacman.moveLeft()
     else if (config.pacmanDirection === 'up') pacman.moveUp()
-    else if (config.pacmanDirection === 'down') {
-      pacman.moveDown()
-      resetGame()
-    }
+    else if (config.pacmanDirection === 'down') pacman.moveDown()
     if (config.pacmanPointsLeft === 0) resetGame()
     checkForNextDirection()
   }, config.pacmanSpeed)
@@ -514,9 +515,6 @@ function startGame (): void {
   }, 5000)
 }
 
-startGame()
-renderGameboard(gameboard)
-
 document.addEventListener('keydown', (event) => {
   const key = event.key
   if (key === 'ArrowRight') config.pacmanNextDirection = 'right'
@@ -528,3 +526,6 @@ document.addEventListener('keydown', (event) => {
 function resetGame (): void {
   window.location.reload()
 }
+
+startGame()
+renderGameboard(gameboard)
