@@ -469,6 +469,21 @@ setTimeout(() => {
     setTimeout(() => { clyde.moveUp(); }, config.ghostSpeed.clyde * 2);
     setTimeout(() => { clyde.moveUp(); }, config.ghostSpeed.clyde * 3);
     setTimeout(() => { clyde.moveUp(); }, config.ghostSpeed.clyde * 4);
+    setTimeout(() => {
+        setInterval(() => {
+            const distanceToPacman = Math.sqrt(Math.pow(clyde.x - pacman.x, 2) + Math.pow(clyde.y - pacman.y, 2));
+            if (distanceToPacman < 8) {
+                const nextDirection = followThetarget(gameboard, { x: 0, y: 31 }, { x: clyde.x, y: clyde.y }, config.ghostDirections.clyde);
+                config.ghostDirections.clyde = nextDirection;
+                clyde.move(nextDirection);
+            }
+            else {
+                const nextDirection = followThetarget(gameboard, { x: pacman.x, y: pacman.y }, { x: clyde.x, y: clyde.y }, config.ghostDirections.clyde);
+                config.ghostDirections.clyde = nextDirection;
+                clyde.move(nextDirection);
+            }
+        }, config.ghostSpeed.clyde);
+    }, config.ghostSpeed.clyde * 5);
 }, 5000);
 renderGameboard(gameboard);
 document.addEventListener('keydown', (event) => {
