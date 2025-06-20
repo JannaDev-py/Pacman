@@ -27,9 +27,9 @@ const gameboard = [
     [1, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 1], //
     [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1], //
     [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1], //
-    [1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 2, 2, 2, 2, 'b', 2, 2, 2, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1], //
+    [1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1], //
     [1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 3, 3, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1], //
-    [1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 0, 0, 0, 0, 0, 0, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1], //
+    [1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 0, 0, 0, 'b', 0, 0, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1], //
     [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 'i', 0, 'p', 0, 'c', 0, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2], //
     [1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 0, 0, 0, 0, 0, 0, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1], //
     [1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1], //
@@ -50,15 +50,16 @@ const gameboard = [
 ];
 const startPositions = {
     pacman: { x: 14, y: 17 },
+    blinky: { x: 14, y: 13 },
     pinky: { x: 13, y: 14 },
-    clyde: { x: 15, y: 14 },
-    blinky: { x: 14, y: 11 },
-    inky: { x: 11, y: 14 }
+    inky: { x: 11, y: 14 },
+    clyde: { x: 15, y: 14 }
 };
 canvas.width = canvasContainer.clientWidth;
 canvas.height = canvasContainer.clientHeight;
 const config = {
     pacmanSpeed: 150, // ms to move one block
+    pacmanPointsLeft: 298,
     ghostSpeed: {
         blinky: 200,
         pinky: 200,
@@ -98,6 +99,9 @@ class Pacman {
         if (nextPositionX === 1 || nextPositionX === 3) {
             return;
         }
+        else if (nextPositionX === 2) {
+            config.pacmanPointsLeft -= 1;
+        }
         this.cleanGameboard();
         gameboard[this.y][this.x + 1] = 'P';
         gameboard[this.y][this.x] = 0;
@@ -114,6 +118,9 @@ class Pacman {
         const nextPosition = gameboard[this.y][this.x - 1];
         if (nextPosition === 1 || nextPosition === 3) {
             return;
+        }
+        else if (nextPosition === 2) {
+            config.pacmanPointsLeft -= 1;
         }
         this.cleanGameboard();
         gameboard[this.y][this.x - 1] = 'P';
@@ -132,6 +139,9 @@ class Pacman {
         if (nextPosition === 1 || nextPosition === 3) {
             return;
         }
+        else if (nextPosition === 2) {
+            config.pacmanPointsLeft -= 1;
+        }
         this.cleanGameboard();
         gameboard[this.y - 1][this.x] = 'P';
         gameboard[this.y][this.x] = 0;
@@ -147,6 +157,9 @@ class Pacman {
             nextPosition === 'i' ||
             nextPosition === 'c') {
             return;
+        }
+        else if (nextPosition === 2) {
+            config.pacmanPointsLeft -= 1;
         }
         this.cleanGameboard();
         gameboard[this.y + 1][this.x] = 'P';
@@ -361,130 +374,139 @@ function renderGameboard(gameboard) {
         });
     });
 }
-setInterval(() => {
-    if (config.pacmanDirection === 'right')
-        pacman.moveRight();
-    if (config.pacmanDirection === 'left')
-        pacman.moveLeft();
-    if (config.pacmanDirection === 'up')
-        pacman.moveUp();
-    if (config.pacmanDirection === 'down')
-        pacman.moveDown();
-    checkForNextDirection();
-}, config.pacmanSpeed);
-// rutine for blinky
-setTimeout(() => {
+function startGame() {
     setInterval(() => {
+        if (config.pacmanDirection === 'right')
+            pacman.moveRight();
+        else if (config.pacmanDirection === 'left')
+            pacman.moveLeft();
+        else if (config.pacmanDirection === 'up')
+            pacman.moveUp();
+        else if (config.pacmanDirection === 'down') {
+            pacman.moveDown();
+            resetGame();
+        }
+        if (config.pacmanPointsLeft === 0)
+            resetGame();
+        checkForNextDirection();
+    }, config.pacmanSpeed);
+    // rutine for blinky
+    setTimeout(() => {
         const blinky = ghosts[0];
-        const blinkyDirection = followThetarget(gameboard, { x: pacman.x, y: pacman.y }, { x: blinky.x, y: blinky.y }, config.ghostDirections.blinky);
-        config.ghostDirections.blinky = blinkyDirection;
-        blinky.move(blinkyDirection);
-    }, config.ghostSpeed.blinky);
-}, 1000);
-// rutine for pinky
-setTimeout(() => {
-    const pinky = ghosts[1];
-    setTimeout(() => { pinky.moveUp(); }, config.ghostSpeed.pinky);
-    setTimeout(() => { pinky.moveUp(); }, config.ghostSpeed.pinky * 2);
-    setTimeout(() => { pinky.moveUp(); }, config.ghostSpeed.pinky * 3);
-    setTimeout(() => {
+        setTimeout(() => { blinky.moveUp(); }, config.ghostSpeed.blinky);
+        setTimeout(() => { blinky.moveUp(); }, config.ghostSpeed.blinky);
         setInterval(() => {
-            const pacmanDirection = config.pacmanDirection;
-            if (pacmanDirection === 'right') {
-                const pacmanX = ((pacman.x + 4) <= gameboard.length) ? gameboard.length : pacman.x + 4;
-                const nextDirection = followThetarget(gameboard, { x: pacmanX, y: pacman.y }, { x: pinky.x, y: pinky.y }, config.ghostDirections.pinky);
-                config.ghostDirections.pinky = nextDirection;
-                pinky.move(nextDirection);
-            }
-            else if (pacmanDirection === 'left') {
-                const pacmanX = ((pacman.x - 4) <= gameboard.length) ? gameboard.length : pacman.x - 4;
-                const nextDirection = followThetarget(gameboard, { x: pacmanX, y: pacman.y }, { x: pinky.x, y: pinky.y }, config.ghostDirections.pinky);
-                config.ghostDirections.pinky = nextDirection;
-                pinky.move(nextDirection);
-            }
-            else if (pacmanDirection === 'up') {
-                const pacmanY = ((pacman.y - 4) <= gameboard.length) ? gameboard.length : pacman.y - 4;
-                const nextDirection = followThetarget(gameboard, { x: pacman.x, y: pacmanY }, { x: pinky.x, y: pinky.y }, config.ghostDirections.pinky);
-                config.ghostDirections.pinky = nextDirection;
-                pinky.move(nextDirection);
-            }
-            else if (pacmanDirection === 'down') {
-                const pacmanY = ((pacman.y + 4) >= gameboard.length) ? gameboard.length : pacman.y + 4;
-                const nextDirection = followThetarget(gameboard, { x: pacman.x, y: pacmanY }, { x: pinky.x, y: pinky.y }, config.ghostDirections.pinky);
-                config.ghostDirections.pinky = nextDirection;
-                pinky.move(nextDirection);
-            }
-        }, config.ghostSpeed.pinky);
-    }, config.ghostSpeed.pinky * 4);
-}, 1500);
-// rutine for inky
-setTimeout(() => {
-    const inky = ghosts[2];
-    const blinky = ghosts[0];
-    setTimeout(() => { inky.moveRight(); }, config.ghostSpeed.inky);
-    setTimeout(() => { inky.moveRight(); }, config.ghostSpeed.inky * 2);
-    setTimeout(() => { inky.moveUp(); }, config.ghostSpeed.inky * 3);
-    setTimeout(() => { inky.moveUp(); }, config.ghostSpeed.inky * 4);
-    setTimeout(() => { inky.moveUp(); }, config.ghostSpeed.inky * 5);
+            const blinkyDirection = followThetarget(gameboard, { x: pacman.x, y: pacman.y }, { x: blinky.x, y: blinky.y }, config.ghostDirections.blinky);
+            config.ghostDirections.blinky = blinkyDirection;
+            blinky.move(blinkyDirection);
+        }, config.ghostSpeed.blinky * 2);
+    }, 1000);
+    // rutine for pinky
     setTimeout(() => {
-        setInterval(() => {
-            let secondBlockPacman;
-            if (config.pacmanDirection === 'right') {
-                secondBlockPacman = { x: pacman.x + 2, y: pacman.y };
-            }
-            else if (config.pacmanDirection === 'left') {
-                secondBlockPacman = { x: pacman.x - 2, y: pacman.y };
-            }
-            else if (config.pacmanDirection === 'up') {
-                secondBlockPacman = { x: pacman.x, y: pacman.y - 2 };
-            }
-            else if (config.pacmanDirection === 'down') {
-                secondBlockPacman = { x: pacman.x, y: pacman.y + 2 };
-            }
-            else {
-                secondBlockPacman = { x: pacman.x, y: pacman.y };
-            }
-            const distanceX = Math.abs(secondBlockPacman.x - blinky.x);
-            const distanceY = Math.abs(secondBlockPacman.y - blinky.y);
-            let targetX = (secondBlockPacman.x > blinky.x) ? blinky.x - distanceX : blinky.x + distanceX;
-            let targetY = (secondBlockPacman.y > blinky.y) ? blinky.y - distanceY : blinky.y + distanceY;
-            if (targetX < 0)
-                targetX = 0;
-            if (targetY < 0)
-                targetY = 0;
-            if (targetX > gameboard[0].length - 1)
-                targetX = gameboard[0].length - 1;
-            if (targetY > gameboard.length - 1)
-                targetY = gameboard.length - 1;
-            const nextDirection = followThetarget(gameboard, { x: targetX, y: targetY }, { x: inky.x, y: inky.y }, config.ghostDirections.inky);
-            config.ghostDirections.inky = nextDirection;
-            inky.move(nextDirection);
-        }, config.ghostSpeed.inky);
-    }, config.ghostSpeed.inky * 6);
-}, 3000);
-// clyde rutine
-setTimeout(() => {
-    const clyde = ghosts[3];
-    setTimeout(() => { clyde.moveLeft(); }, config.ghostSpeed.clyde);
-    setTimeout(() => { clyde.moveUp(); }, config.ghostSpeed.clyde * 2);
-    setTimeout(() => { clyde.moveUp(); }, config.ghostSpeed.clyde * 3);
-    setTimeout(() => { clyde.moveUp(); }, config.ghostSpeed.clyde * 4);
+        const pinky = ghosts[1];
+        setTimeout(() => { pinky.moveUp(); }, config.ghostSpeed.pinky);
+        setTimeout(() => { pinky.moveUp(); }, config.ghostSpeed.pinky * 2);
+        setTimeout(() => { pinky.moveUp(); }, config.ghostSpeed.pinky * 3);
+        setTimeout(() => {
+            setInterval(() => {
+                const pacmanDirection = config.pacmanDirection;
+                if (pacmanDirection === 'right') {
+                    const pacmanX = ((pacman.x + 4) <= gameboard.length) ? gameboard.length : pacman.x + 4;
+                    const nextDirection = followThetarget(gameboard, { x: pacmanX, y: pacman.y }, { x: pinky.x, y: pinky.y }, config.ghostDirections.pinky);
+                    config.ghostDirections.pinky = nextDirection;
+                    pinky.move(nextDirection);
+                }
+                else if (pacmanDirection === 'left') {
+                    const pacmanX = ((pacman.x - 4) <= gameboard.length) ? gameboard.length : pacman.x - 4;
+                    const nextDirection = followThetarget(gameboard, { x: pacmanX, y: pacman.y }, { x: pinky.x, y: pinky.y }, config.ghostDirections.pinky);
+                    config.ghostDirections.pinky = nextDirection;
+                    pinky.move(nextDirection);
+                }
+                else if (pacmanDirection === 'up') {
+                    const pacmanY = ((pacman.y - 4) <= gameboard.length) ? gameboard.length : pacman.y - 4;
+                    const nextDirection = followThetarget(gameboard, { x: pacman.x, y: pacmanY }, { x: pinky.x, y: pinky.y }, config.ghostDirections.pinky);
+                    config.ghostDirections.pinky = nextDirection;
+                    pinky.move(nextDirection);
+                }
+                else if (pacmanDirection === 'down') {
+                    const pacmanY = ((pacman.y + 4) >= gameboard.length) ? gameboard.length : pacman.y + 4;
+                    const nextDirection = followThetarget(gameboard, { x: pacman.x, y: pacmanY }, { x: pinky.x, y: pinky.y }, config.ghostDirections.pinky);
+                    config.ghostDirections.pinky = nextDirection;
+                    pinky.move(nextDirection);
+                }
+            }, config.ghostSpeed.pinky);
+        }, config.ghostSpeed.pinky * 4);
+    }, 1500);
+    // rutine for inky
     setTimeout(() => {
-        setInterval(() => {
-            const distanceToPacman = Math.sqrt(Math.pow(clyde.x - pacman.x, 2) + Math.pow(clyde.y - pacman.y, 2));
-            if (distanceToPacman < 8) {
-                const nextDirection = followThetarget(gameboard, { x: 0, y: 31 }, { x: clyde.x, y: clyde.y }, config.ghostDirections.clyde);
-                config.ghostDirections.clyde = nextDirection;
-                clyde.move(nextDirection);
-            }
-            else {
-                const nextDirection = followThetarget(gameboard, { x: pacman.x, y: pacman.y }, { x: clyde.x, y: clyde.y }, config.ghostDirections.clyde);
-                config.ghostDirections.clyde = nextDirection;
-                clyde.move(nextDirection);
-            }
-        }, config.ghostSpeed.clyde);
-    }, config.ghostSpeed.clyde * 5);
-}, 5000);
+        const inky = ghosts[2];
+        const blinky = ghosts[0];
+        setTimeout(() => { inky.moveRight(); }, config.ghostSpeed.inky);
+        setTimeout(() => { inky.moveRight(); }, config.ghostSpeed.inky * 2);
+        setTimeout(() => { inky.moveUp(); }, config.ghostSpeed.inky * 3);
+        setTimeout(() => { inky.moveUp(); }, config.ghostSpeed.inky * 4);
+        setTimeout(() => { inky.moveUp(); }, config.ghostSpeed.inky * 5);
+        setTimeout(() => {
+            setInterval(() => {
+                let secondBlockPacman;
+                if (config.pacmanDirection === 'right') {
+                    secondBlockPacman = { x: pacman.x + 2, y: pacman.y };
+                }
+                else if (config.pacmanDirection === 'left') {
+                    secondBlockPacman = { x: pacman.x - 2, y: pacman.y };
+                }
+                else if (config.pacmanDirection === 'up') {
+                    secondBlockPacman = { x: pacman.x, y: pacman.y - 2 };
+                }
+                else if (config.pacmanDirection === 'down') {
+                    secondBlockPacman = { x: pacman.x, y: pacman.y + 2 };
+                }
+                else {
+                    secondBlockPacman = { x: pacman.x, y: pacman.y };
+                }
+                const distanceX = Math.abs(secondBlockPacman.x - blinky.x);
+                const distanceY = Math.abs(secondBlockPacman.y - blinky.y);
+                let targetX = (secondBlockPacman.x > blinky.x) ? blinky.x - distanceX : blinky.x + distanceX;
+                let targetY = (secondBlockPacman.y > blinky.y) ? blinky.y - distanceY : blinky.y + distanceY;
+                if (targetX < 0)
+                    targetX = 0;
+                if (targetY < 0)
+                    targetY = 0;
+                if (targetX > gameboard[0].length - 1)
+                    targetX = gameboard[0].length - 1;
+                if (targetY > gameboard.length - 1)
+                    targetY = gameboard.length - 1;
+                const nextDirection = followThetarget(gameboard, { x: targetX, y: targetY }, { x: inky.x, y: inky.y }, config.ghostDirections.inky);
+                config.ghostDirections.inky = nextDirection;
+                inky.move(nextDirection);
+            }, config.ghostSpeed.inky);
+        }, config.ghostSpeed.inky * 6);
+    }, 3000);
+    // clyde rutine
+    setTimeout(() => {
+        const clyde = ghosts[3];
+        setTimeout(() => { clyde.moveLeft(); }, config.ghostSpeed.clyde);
+        setTimeout(() => { clyde.moveUp(); }, config.ghostSpeed.clyde * 2);
+        setTimeout(() => { clyde.moveUp(); }, config.ghostSpeed.clyde * 3);
+        setTimeout(() => { clyde.moveUp(); }, config.ghostSpeed.clyde * 4);
+        setTimeout(() => {
+            setInterval(() => {
+                const distanceToPacman = Math.sqrt(Math.pow(clyde.x - pacman.x, 2) + Math.pow(clyde.y - pacman.y, 2));
+                if (distanceToPacman < 8) {
+                    const nextDirection = followThetarget(gameboard, { x: 0, y: 31 }, { x: clyde.x, y: clyde.y }, config.ghostDirections.clyde);
+                    config.ghostDirections.clyde = nextDirection;
+                    clyde.move(nextDirection);
+                }
+                else {
+                    const nextDirection = followThetarget(gameboard, { x: pacman.x, y: pacman.y }, { x: clyde.x, y: clyde.y }, config.ghostDirections.clyde);
+                    config.ghostDirections.clyde = nextDirection;
+                    clyde.move(nextDirection);
+                }
+            }, config.ghostSpeed.clyde);
+        }, config.ghostSpeed.clyde * 5);
+    }, 5000);
+}
+startGame();
 renderGameboard(gameboard);
 document.addEventListener('keydown', (event) => {
     const key = event.key;
@@ -497,3 +519,6 @@ document.addEventListener('keydown', (event) => {
     else if (key === 'ArrowDown')
         config.pacmanNextDirection = 'down';
 });
+function resetGame() {
+    window.location.reload();
+}
