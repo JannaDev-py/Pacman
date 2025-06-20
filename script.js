@@ -57,6 +57,32 @@ const startPositions = {
 };
 canvas.width = canvasContainer.clientWidth;
 canvas.height = canvasContainer.clientHeight;
+let pacmanInterval = null;
+let blinkyInterval = null;
+let blinkyTimeout = null;
+let blinkyTimeout2 = null;
+let blinkyTimeout3 = null;
+let pinkyInterval = null;
+let pinkyTimeout = null;
+let pinkyTimeout2 = null;
+let pinkyTimeout3 = null;
+let pinkyTimeout4 = null;
+let pinkyTimeout5 = null;
+let inkyInterval = null;
+let inkyTimeout = null;
+let inkyTimeout2 = null;
+let inkyTimeout3 = null;
+let inkyTimeout4 = null;
+let inkyTimeout5 = null;
+let inkyTimeout6 = null;
+let inkyTimeout7 = null;
+let clydeInterval = null;
+let clydeTimeout = null;
+let clydeTimeout2 = null;
+let clydeTimeout3 = null;
+let clydeTimeout4 = null;
+let clydeTimeout5 = null;
+let clydeTimeout6 = null;
 const config = {
     pacmanSpeed: 150, // ms to move one block
     pacmanPointsLeft: 298,
@@ -179,7 +205,7 @@ class Ghost {
         gameboard.forEach((row, rowIndex) => {
             row.forEach((cell, cellIndex) => {
                 if (cell === this.letter) {
-                    gameboard[rowIndex][cellIndex] = 0;
+                    gameboard[rowIndex][cellIndex] = this.previousState;
                 }
             });
         });
@@ -191,14 +217,15 @@ class Ghost {
             return;
         }
         else if (nextPosition === 'P') {
+            reUbiicatePacman();
             config.pacmanLives -= 1;
             if (config.pacmanLives === 0)
                 resetGame();
         }
         this.cleanGameboard();
-        gameboard[this.y][this.x + 1] = this.letter;
         gameboard[this.y][this.x] = this.previousState;
         this.previousState = nextPosition;
+        gameboard[this.y][this.x + 1] = this.letter;
         this.x += 1;
         if (this.x === gameboard[0].length - 1 && this.y === 14) {
             gameboard[this.y][this.x] = this.previousState;
@@ -215,14 +242,15 @@ class Ghost {
             return;
         }
         else if (nextPosition === 'P') {
+            reUbiicatePacman();
             config.pacmanLives -= 1;
             if (config.pacmanLives === 0)
                 resetGame();
         }
         this.cleanGameboard();
-        gameboard[this.y][this.x - 1] = this.letter;
         gameboard[this.y][this.x] = this.previousState;
         this.previousState = nextPosition;
+        gameboard[this.y][this.x - 1] = this.letter;
         this.x -= 1;
         if (this.x === 0 && this.y === 14) {
             gameboard[this.y][this.x] = this.previousState;
@@ -239,14 +267,15 @@ class Ghost {
             return;
         }
         else if (nextPosition === 'P') {
+            reUbiicatePacman();
             config.pacmanLives -= 1;
             if (config.pacmanLives === 0)
                 resetGame();
         }
         this.cleanGameboard();
-        gameboard[this.y - 1][this.x] = this.letter;
         gameboard[this.y][this.x] = this.previousState;
         this.previousState = nextPosition;
+        gameboard[this.y - 1][this.x] = this.letter;
         this.y -= 1;
     }
     moveDown() {
@@ -261,14 +290,15 @@ class Ghost {
             return;
         }
         else if (nextPosition === 'P') {
+            reUbiicatePacman();
             config.pacmanLives -= 1;
             if (config.pacmanLives === 0)
                 resetGame();
         }
         this.cleanGameboard();
-        gameboard[this.y + 1][this.x] = this.letter;
         gameboard[this.y][this.x] = this.previousState;
         this.previousState = nextPosition;
+        gameboard[this.y + 1][this.x] = this.letter;
         this.y += 1;
     }
     move(move) {
@@ -383,7 +413,7 @@ function renderGameboard(gameboard) {
     });
 }
 function startGame() {
-    setInterval(() => {
+    pacmanInterval = setInterval(() => {
         if (config.pacmanDirection === 'right')
             pacman.moveRight();
         else if (config.pacmanDirection === 'left')
@@ -392,29 +422,29 @@ function startGame() {
             pacman.moveUp();
         else if (config.pacmanDirection === 'down')
             pacman.moveDown();
-        if (config.pacmanPointsLeft === 0)
+        if (config.pacmanPointsLeft <= 0)
             resetGame();
         checkForNextDirection();
     }, config.pacmanSpeed);
     // rutine for blinky
-    setTimeout(() => {
+    blinkyTimeout = setTimeout(() => {
         const blinky = ghosts[0];
-        setTimeout(() => { blinky.moveUp(); }, config.ghostSpeed.blinky);
-        setTimeout(() => { blinky.moveUp(); }, config.ghostSpeed.blinky);
-        setInterval(() => {
+        blinkyTimeout2 = setTimeout(() => { blinky.moveUp(); }, config.ghostSpeed.blinky);
+        blinkyTimeout3 = setTimeout(() => { blinky.moveUp(); }, config.ghostSpeed.blinky);
+        blinkyInterval = setInterval(() => {
             const blinkyDirection = followThetarget(gameboard, { x: pacman.x, y: pacman.y }, { x: blinky.x, y: blinky.y }, config.ghostDirections.blinky);
             config.ghostDirections.blinky = blinkyDirection;
             blinky.move(blinkyDirection);
         }, config.ghostSpeed.blinky * 2);
     }, 1000);
     // rutine for pinky
-    setTimeout(() => {
+    pinkyTimeout = setTimeout(() => {
         const pinky = ghosts[1];
-        setTimeout(() => { pinky.moveUp(); }, config.ghostSpeed.pinky);
-        setTimeout(() => { pinky.moveUp(); }, config.ghostSpeed.pinky * 2);
-        setTimeout(() => { pinky.moveUp(); }, config.ghostSpeed.pinky * 3);
-        setTimeout(() => {
-            setInterval(() => {
+        pinkyTimeout2 = setTimeout(() => { pinky.moveUp(); }, config.ghostSpeed.pinky);
+        pinkyTimeout3 = setTimeout(() => { pinky.moveUp(); }, config.ghostSpeed.pinky * 2);
+        pinkyTimeout4 = setTimeout(() => { pinky.moveUp(); }, config.ghostSpeed.pinky * 3);
+        pinkyTimeout5 = setTimeout(() => {
+            pinkyInterval = setInterval(() => {
                 const pacmanDirection = config.pacmanDirection;
                 if (pacmanDirection === 'right') {
                     const pacmanX = ((pacman.x + 4) <= gameboard.length) ? gameboard.length : pacman.x + 4;
@@ -444,16 +474,16 @@ function startGame() {
         }, config.ghostSpeed.pinky * 4);
     }, 1500);
     // rutine for inky
-    setTimeout(() => {
+    inkyTimeout = setTimeout(() => {
         const inky = ghosts[2];
         const blinky = ghosts[0];
-        setTimeout(() => { inky.moveRight(); }, config.ghostSpeed.inky);
-        setTimeout(() => { inky.moveRight(); }, config.ghostSpeed.inky * 2);
-        setTimeout(() => { inky.moveUp(); }, config.ghostSpeed.inky * 3);
-        setTimeout(() => { inky.moveUp(); }, config.ghostSpeed.inky * 4);
-        setTimeout(() => { inky.moveUp(); }, config.ghostSpeed.inky * 5);
-        setTimeout(() => {
-            setInterval(() => {
+        inkyTimeout2 = setTimeout(() => { inky.moveRight(); }, config.ghostSpeed.inky);
+        inkyTimeout3 = setTimeout(() => { inky.moveRight(); }, config.ghostSpeed.inky * 2);
+        inkyTimeout4 = setTimeout(() => { inky.moveUp(); }, config.ghostSpeed.inky * 3);
+        inkyTimeout5 = setTimeout(() => { inky.moveUp(); }, config.ghostSpeed.inky * 4);
+        inkyTimeout6 = setTimeout(() => { inky.moveUp(); }, config.ghostSpeed.inky * 5);
+        inkyTimeout7 = setTimeout(() => {
+            inkyInterval = setInterval(() => {
                 let secondBlockPacman;
                 if (config.pacmanDirection === 'right') {
                     secondBlockPacman = { x: pacman.x + 2, y: pacman.y };
@@ -489,14 +519,14 @@ function startGame() {
         }, config.ghostSpeed.inky * 6);
     }, 3000);
     // clyde rutine
-    setTimeout(() => {
+    clydeTimeout = setTimeout(() => {
         const clyde = ghosts[3];
-        setTimeout(() => { clyde.moveLeft(); }, config.ghostSpeed.clyde);
-        setTimeout(() => { clyde.moveUp(); }, config.ghostSpeed.clyde * 2);
-        setTimeout(() => { clyde.moveUp(); }, config.ghostSpeed.clyde * 3);
-        setTimeout(() => { clyde.moveUp(); }, config.ghostSpeed.clyde * 4);
-        setTimeout(() => {
-            setInterval(() => {
+        clydeTimeout2 = setTimeout(() => { clyde.moveLeft(); }, config.ghostSpeed.clyde);
+        clydeTimeout3 = setTimeout(() => { clyde.moveUp(); }, config.ghostSpeed.clyde * 2);
+        clydeTimeout4 = setTimeout(() => { clyde.moveUp(); }, config.ghostSpeed.clyde * 3);
+        clydeTimeout5 = setTimeout(() => { clyde.moveUp(); }, config.ghostSpeed.clyde * 4);
+        clydeTimeout6 = setTimeout(() => {
+            clydeInterval = setInterval(() => {
                 const distanceToPacman = Math.sqrt(Math.pow(clyde.x - pacman.x, 2) + Math.pow(clyde.y - pacman.y, 2));
                 if (distanceToPacman < 8) {
                     const nextDirection = followThetarget(gameboard, { x: 0, y: 31 }, { x: clyde.x, y: clyde.y }, config.ghostDirections.clyde);
@@ -528,3 +558,61 @@ function resetGame() {
 }
 startGame();
 renderGameboard(gameboard);
+function reUbiicatePacman() {
+    config.ghostDirections = {
+        blinky: '',
+        pinky: '',
+        inky: '',
+        clyde: ''
+    };
+    pacman.x = startPositions.pacman.x;
+    pacman.y = startPositions.pacman.y;
+    ghosts[0].x = startPositions.blinky.x;
+    ghosts[0].y = startPositions.blinky.y;
+    ghosts[1].x = startPositions.pinky.x;
+    ghosts[1].y = startPositions.pinky.y;
+    ghosts[2].x = startPositions.inky.x;
+    ghosts[2].y = startPositions.inky.y;
+    ghosts[3].x = startPositions.clyde.x;
+    ghosts[3].y = startPositions.clyde.y;
+    pacman.cleanGameboard();
+    ghosts[0].cleanGameboard();
+    ghosts[1].cleanGameboard();
+    ghosts[2].cleanGameboard();
+    ghosts[3].cleanGameboard();
+    gameboard[pacman.y][pacman.x] = 'P';
+    gameboard[ghosts[0].y][ghosts[0].x] = 'b';
+    gameboard[ghosts[1].y][ghosts[1].x] = 'p';
+    gameboard[ghosts[2].y][ghosts[2].x] = 'i';
+    gameboard[ghosts[3].y][ghosts[3].x] = 'c';
+    clearInterval(pacmanInterval);
+    clearInterval(blinkyInterval);
+    clearTimeout(blinkyTimeout);
+    clearTimeout(blinkyTimeout2);
+    clearTimeout(blinkyTimeout3);
+    clearInterval(pinkyInterval);
+    clearTimeout(pinkyTimeout);
+    clearTimeout(pinkyTimeout2);
+    clearTimeout(pinkyTimeout3);
+    clearTimeout(pinkyTimeout4);
+    clearTimeout(pinkyTimeout5);
+    clearInterval(inkyInterval);
+    clearTimeout(inkyTimeout);
+    clearTimeout(inkyTimeout2);
+    clearTimeout(inkyTimeout3);
+    clearTimeout(inkyTimeout4);
+    clearTimeout(inkyTimeout5);
+    clearTimeout(inkyTimeout6);
+    clearTimeout(inkyTimeout7);
+    clearInterval(clydeInterval);
+    clearTimeout(clydeTimeout);
+    clearTimeout(clydeTimeout2);
+    clearTimeout(clydeTimeout3);
+    clearTimeout(clydeTimeout4);
+    clearTimeout(clydeTimeout5);
+    clearTimeout(clydeTimeout6);
+    config.pacmanDirection = 'right';
+    renderGameboard(gameboard);
+    startGame();
+}
+console.log('Pacman game started!');

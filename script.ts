@@ -62,6 +62,37 @@ const startPositions = {
 canvas.width = canvasContainer.clientWidth
 canvas.height = canvasContainer.clientHeight
 
+let pacmanInterval: NodeJS.Timeout | null = null
+
+let blinkyInterval: NodeJS.Timeout | null = null
+let blinkyTimeout: NodeJS.Timeout | null = null
+let blinkyTimeout2: NodeJS.Timeout | null = null
+let blinkyTimeout3: NodeJS.Timeout | null = null
+
+let pinkyInterval: NodeJS.Timeout | null = null
+let pinkyTimeout: NodeJS.Timeout | null = null
+let pinkyTimeout2: NodeJS.Timeout | null = null
+let pinkyTimeout3: NodeJS.Timeout | null = null
+let pinkyTimeout4: NodeJS.Timeout | null = null
+let pinkyTimeout5: NodeJS.Timeout | null = null
+
+let inkyInterval: NodeJS.Timeout | null = null
+let inkyTimeout: NodeJS.Timeout | null = null
+let inkyTimeout2: NodeJS.Timeout | null = null
+let inkyTimeout3: NodeJS.Timeout | null = null
+let inkyTimeout4: NodeJS.Timeout | null = null
+let inkyTimeout5: NodeJS.Timeout | null = null
+let inkyTimeout6: NodeJS.Timeout | null = null
+let inkyTimeout7: NodeJS.Timeout | null = null
+
+let clydeInterval: NodeJS.Timeout | null = null
+let clydeTimeout: NodeJS.Timeout | null = null
+let clydeTimeout2: NodeJS.Timeout | null = null
+let clydeTimeout3: NodeJS.Timeout | null = null
+let clydeTimeout4: NodeJS.Timeout | null = null
+let clydeTimeout5: NodeJS.Timeout | null = null
+let clydeTimeout6: NodeJS.Timeout | null = null
+
 const config = {
   pacmanSpeed: 150, // ms to move one block
   pacmanPointsLeft: 298,
@@ -197,7 +228,7 @@ class Ghost {
     gameboard.forEach((row, rowIndex) => {
       row.forEach((cell, cellIndex) => {
         if (cell === this.letter) {
-          gameboard[rowIndex][cellIndex] = 0
+          gameboard[rowIndex][cellIndex] = this.previousState
         }
       })
     })
@@ -209,13 +240,14 @@ class Ghost {
     if (nextPosition === 1 || nextPosition === 3) {
       return
     } else if (nextPosition === 'P') {
+      reUbiicatePacman()
       config.pacmanLives -= 1
       if (config.pacmanLives === 0) resetGame()
     }
     this.cleanGameboard()
-    gameboard[this.y][this.x + 1] = this.letter
     gameboard[this.y][this.x] = this.previousState
     this.previousState = nextPosition
+    gameboard[this.y][this.x + 1] = this.letter
     this.x += 1
 
     if (this.x === gameboard[0].length - 1 && this.y === 14) {
@@ -233,13 +265,14 @@ class Ghost {
     if (nextPosition === 1 || nextPosition === 3) {
       return
     } else if (nextPosition === 'P') {
+      reUbiicatePacman()
       config.pacmanLives -= 1
       if (config.pacmanLives === 0) resetGame()
     }
     this.cleanGameboard()
-    gameboard[this.y][this.x - 1] = this.letter
     gameboard[this.y][this.x] = this.previousState
     this.previousState = nextPosition
+    gameboard[this.y][this.x - 1] = this.letter
     this.x -= 1
 
     if (this.x === 0 && this.y === 14) {
@@ -257,13 +290,14 @@ class Ghost {
     if (nextPosition === 1) {
       return
     } else if (nextPosition === 'P') {
+      reUbiicatePacman()
       config.pacmanLives -= 1
       if (config.pacmanLives === 0) resetGame()
     }
     this.cleanGameboard()
-    gameboard[this.y - 1][this.x] = this.letter
     gameboard[this.y][this.x] = this.previousState
     this.previousState = nextPosition
+    gameboard[this.y - 1][this.x] = this.letter
     this.y -= 1
   }
 
@@ -278,13 +312,14 @@ class Ghost {
       nextPosition === 'c') {
       return
     } else if (nextPosition === 'P') {
+      reUbiicatePacman()
       config.pacmanLives -= 1
       if (config.pacmanLives === 0) resetGame()
     }
     this.cleanGameboard()
-    gameboard[this.y + 1][this.x] = this.letter
     gameboard[this.y][this.x] = this.previousState
     this.previousState = nextPosition
+    gameboard[this.y + 1][this.x] = this.letter
     this.y += 1
   }
 
@@ -394,21 +429,21 @@ function renderGameboard (gameboard: Array<Array<number | string>>): void {
 }
 
 function startGame (): void {
-  setInterval(() => {
+  pacmanInterval = setInterval(() => {
     if (config.pacmanDirection === 'right') pacman.moveRight()
     else if (config.pacmanDirection === 'left') pacman.moveLeft()
     else if (config.pacmanDirection === 'up') pacman.moveUp()
     else if (config.pacmanDirection === 'down') pacman.moveDown()
-    if (config.pacmanPointsLeft === 0) resetGame()
+    if (config.pacmanPointsLeft <= 0) resetGame()
     checkForNextDirection()
   }, config.pacmanSpeed)
 
   // rutine for blinky
-  setTimeout(() => {
+  blinkyTimeout = setTimeout(() => {
     const blinky = ghosts[0]
-    setTimeout(() => { blinky.moveUp() }, config.ghostSpeed.blinky)
-    setTimeout(() => { blinky.moveUp() }, config.ghostSpeed.blinky)
-    setInterval(() => {
+    blinkyTimeout2 = setTimeout(() => { blinky.moveUp() }, config.ghostSpeed.blinky)
+    blinkyTimeout3 = setTimeout(() => { blinky.moveUp() }, config.ghostSpeed.blinky)
+    blinkyInterval = setInterval(() => {
       const blinkyDirection = followThetarget(gameboard, { x: pacman.x, y: pacman.y }, { x: blinky.x, y: blinky.y }, config.ghostDirections.blinky)
       config.ghostDirections.blinky = blinkyDirection
       blinky.move(blinkyDirection)
@@ -416,13 +451,13 @@ function startGame (): void {
   }, 1000)
 
   // rutine for pinky
-  setTimeout(() => {
+  pinkyTimeout = setTimeout(() => {
     const pinky = ghosts[1]
-    setTimeout(() => { pinky.moveUp() }, config.ghostSpeed.pinky)
-    setTimeout(() => { pinky.moveUp() }, config.ghostSpeed.pinky * 2)
-    setTimeout(() => { pinky.moveUp() }, config.ghostSpeed.pinky * 3)
-    setTimeout(() => {
-      setInterval(() => {
+    pinkyTimeout2 = setTimeout(() => { pinky.moveUp() }, config.ghostSpeed.pinky)
+    pinkyTimeout3 = setTimeout(() => { pinky.moveUp() }, config.ghostSpeed.pinky * 2)
+    pinkyTimeout4 = setTimeout(() => { pinky.moveUp() }, config.ghostSpeed.pinky * 3)
+    pinkyTimeout5 = setTimeout(() => {
+      pinkyInterval = setInterval(() => {
         const pacmanDirection = config.pacmanDirection
         if (pacmanDirection === 'right') {
           const pacmanX = ((pacman.x + 4) <= gameboard.length) ? gameboard.length : pacman.x + 4
@@ -450,16 +485,16 @@ function startGame (): void {
   }, 1500)
 
   // rutine for inky
-  setTimeout(() => {
+  inkyTimeout = setTimeout(() => {
     const inky = ghosts[2]
     const blinky = ghosts[0]
-    setTimeout(() => { inky.moveRight() }, config.ghostSpeed.inky)
-    setTimeout(() => { inky.moveRight() }, config.ghostSpeed.inky * 2)
-    setTimeout(() => { inky.moveUp() }, config.ghostSpeed.inky * 3)
-    setTimeout(() => { inky.moveUp() }, config.ghostSpeed.inky * 4)
-    setTimeout(() => { inky.moveUp() }, config.ghostSpeed.inky * 5)
-    setTimeout(() => {
-      setInterval(() => {
+    inkyTimeout2 = setTimeout(() => { inky.moveRight() }, config.ghostSpeed.inky)
+    inkyTimeout3 = setTimeout(() => { inky.moveRight() }, config.ghostSpeed.inky * 2)
+    inkyTimeout4 = setTimeout(() => { inky.moveUp() }, config.ghostSpeed.inky * 3)
+    inkyTimeout5 = setTimeout(() => { inky.moveUp() }, config.ghostSpeed.inky * 4)
+    inkyTimeout6 = setTimeout(() => { inky.moveUp() }, config.ghostSpeed.inky * 5)
+    inkyTimeout7 = setTimeout(() => {
+      inkyInterval = setInterval(() => {
         let secondBlockPacman: { x: number, y: number }
 
         if (config.pacmanDirection === 'right') {
@@ -492,14 +527,14 @@ function startGame (): void {
   }, 3000)
 
   // clyde rutine
-  setTimeout(() => {
+  clydeTimeout = setTimeout(() => {
     const clyde = ghosts[3]
-    setTimeout(() => { clyde.moveLeft() }, config.ghostSpeed.clyde)
-    setTimeout(() => { clyde.moveUp() }, config.ghostSpeed.clyde * 2)
-    setTimeout(() => { clyde.moveUp() }, config.ghostSpeed.clyde * 3)
-    setTimeout(() => { clyde.moveUp() }, config.ghostSpeed.clyde * 4)
-    setTimeout(() => {
-      setInterval(() => {
+    clydeTimeout2 = setTimeout(() => { clyde.moveLeft() }, config.ghostSpeed.clyde)
+    clydeTimeout3 = setTimeout(() => { clyde.moveUp() }, config.ghostSpeed.clyde * 2)
+    clydeTimeout4 = setTimeout(() => { clyde.moveUp() }, config.ghostSpeed.clyde * 3)
+    clydeTimeout5 = setTimeout(() => { clyde.moveUp() }, config.ghostSpeed.clyde * 4)
+    clydeTimeout6 = setTimeout(() => {
+      clydeInterval = setInterval(() => {
         const distanceToPacman = Math.sqrt(Math.pow(clyde.x - pacman.x, 2) + Math.pow(clyde.y - pacman.y, 2))
         if (distanceToPacman < 8) {
           const nextDirection = followThetarget(gameboard, { x: 0, y: 31 }, { x: clyde.x, y: clyde.y }, config.ghostDirections.clyde)
@@ -529,3 +564,72 @@ function resetGame (): void {
 
 startGame()
 renderGameboard(gameboard)
+
+function reUbiicatePacman (): void {
+  config.ghostDirections = {
+    blinky: '',
+    pinky: '',
+    inky: '',
+    clyde: ''
+  }
+
+  pacman.x = startPositions.pacman.x
+  pacman.y = startPositions.pacman.y
+
+  ghosts[0].x = startPositions.blinky.x
+  ghosts[0].y = startPositions.blinky.y
+  ghosts[1].x = startPositions.pinky.x
+  ghosts[1].y = startPositions.pinky.y
+  ghosts[2].x = startPositions.inky.x
+  ghosts[2].y = startPositions.inky.y
+  ghosts[3].x = startPositions.clyde.x
+  ghosts[3].y = startPositions.clyde.y
+
+  pacman.cleanGameboard()
+  ghosts[0].cleanGameboard()
+  ghosts[1].cleanGameboard()
+  ghosts[2].cleanGameboard()
+  ghosts[3].cleanGameboard()
+
+  gameboard[pacman.y][pacman.x] = 'P'
+  gameboard[ghosts[0].y][ghosts[0].x] = 'b'
+  gameboard[ghosts[1].y][ghosts[1].x] = 'p'
+  gameboard[ghosts[2].y][ghosts[2].x] = 'i'
+  gameboard[ghosts[3].y][ghosts[3].x] = 'c'
+  clearInterval(pacmanInterval as NodeJS.Timeout)
+
+  clearInterval(blinkyInterval as NodeJS.Timeout)
+  clearTimeout(blinkyTimeout as NodeJS.Timeout)
+  clearTimeout(blinkyTimeout2 as NodeJS.Timeout)
+  clearTimeout(blinkyTimeout3 as NodeJS.Timeout)
+
+  clearInterval(pinkyInterval as NodeJS.Timeout)
+  clearTimeout(pinkyTimeout as NodeJS.Timeout)
+  clearTimeout(pinkyTimeout2 as NodeJS.Timeout)
+  clearTimeout(pinkyTimeout3 as NodeJS.Timeout)
+  clearTimeout(pinkyTimeout4 as NodeJS.Timeout)
+  clearTimeout(pinkyTimeout5 as NodeJS.Timeout)
+
+  clearInterval(inkyInterval as NodeJS.Timeout)
+  clearTimeout(inkyTimeout as NodeJS.Timeout)
+  clearTimeout(inkyTimeout2 as NodeJS.Timeout)
+  clearTimeout(inkyTimeout3 as NodeJS.Timeout)
+  clearTimeout(inkyTimeout4 as NodeJS.Timeout)
+  clearTimeout(inkyTimeout5 as NodeJS.Timeout)
+  clearTimeout(inkyTimeout6 as NodeJS.Timeout)
+  clearTimeout(inkyTimeout7 as NodeJS.Timeout)
+
+  clearInterval(clydeInterval as NodeJS.Timeout)
+  clearTimeout(clydeTimeout as NodeJS.Timeout)
+  clearTimeout(clydeTimeout2 as NodeJS.Timeout)
+  clearTimeout(clydeTimeout3 as NodeJS.Timeout)
+  clearTimeout(clydeTimeout4 as NodeJS.Timeout)
+  clearTimeout(clydeTimeout5 as NodeJS.Timeout)
+  clearTimeout(clydeTimeout6 as NodeJS.Timeout)
+
+  config.pacmanDirection = 'right'
+  renderGameboard(gameboard)
+  startGame()
+}
+
+console.log('Pacman game started!')
