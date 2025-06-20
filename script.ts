@@ -131,7 +131,6 @@ class Pacman {
         }
       })
     })
-    config.pacmanLives = 3
   }
 
   moveRight (): void {
@@ -141,6 +140,9 @@ class Pacman {
       return
     } else if (nextPositionX === 2) {
       config.pacmanPointsLeft -= 1
+    }
+    if (nextPositionX === 'b' || nextPositionX === 'i' || nextPositionX === 'c' || nextPositionX === 'P') {
+      reUbiicatePacman()
     }
     this.cleanGameboard()
     gameboard[this.y][this.x + 1] = 'P'
@@ -163,6 +165,9 @@ class Pacman {
     } else if (nextPosition === 2) {
       config.pacmanPointsLeft -= 1
     }
+    if (nextPosition === 'b' || nextPosition === 'i' || nextPosition === 'c' || nextPosition === 'P') {
+      reUbiicatePacman()
+    }
     this.cleanGameboard()
     gameboard[this.y][this.x - 1] = 'P'
     gameboard[this.y][this.x] = 0
@@ -184,6 +189,10 @@ class Pacman {
     } else if (nextPosition === 2) {
       config.pacmanPointsLeft -= 1
     }
+    if (nextPosition === 'b' || nextPosition === 'i' || nextPosition === 'c' || nextPosition === 'P') {
+      reUbiicatePacman()
+    }
+
     this.cleanGameboard()
     gameboard[this.y - 1][this.x] = 'P'
     gameboard[this.y][this.x] = 0
@@ -203,6 +212,10 @@ class Pacman {
     } else if (nextPosition === 2) {
       config.pacmanPointsLeft -= 1
     }
+    if (nextPosition === 'b' || nextPosition === 'i' || nextPosition === 'c' || nextPosition === 'P') {
+      reUbiicatePacman()
+    }
+
     this.cleanGameboard()
     gameboard[this.y + 1][this.x] = 'P'
     gameboard[this.y][this.x] = 0
@@ -241,8 +254,6 @@ class Ghost {
       return
     } else if (nextPosition === 'P') {
       reUbiicatePacman()
-      config.pacmanLives -= 1
-      if (config.pacmanLives === 0) resetGame()
     }
     this.cleanGameboard()
     gameboard[this.y][this.x] = this.previousState
@@ -266,8 +277,6 @@ class Ghost {
       return
     } else if (nextPosition === 'P') {
       reUbiicatePacman()
-      config.pacmanLives -= 1
-      if (config.pacmanLives === 0) resetGame()
     }
     this.cleanGameboard()
     gameboard[this.y][this.x] = this.previousState
@@ -291,8 +300,6 @@ class Ghost {
       return
     } else if (nextPosition === 'P') {
       reUbiicatePacman()
-      config.pacmanLives -= 1
-      if (config.pacmanLives === 0) resetGame()
     }
     this.cleanGameboard()
     gameboard[this.y][this.x] = this.previousState
@@ -313,8 +320,6 @@ class Ghost {
       return
     } else if (nextPosition === 'P') {
       reUbiicatePacman()
-      config.pacmanLives -= 1
-      if (config.pacmanLives === 0) resetGame()
     }
     this.cleanGameboard()
     gameboard[this.y][this.x] = this.previousState
@@ -566,6 +571,8 @@ startGame()
 renderGameboard(gameboard)
 
 function reUbiicatePacman (): void {
+  config.pacmanLives -= 1
+  if (config.pacmanLives <= 0) resetGame()
   config.ghostDirections = {
     blinky: '',
     pinky: '',
@@ -631,5 +638,3 @@ function reUbiicatePacman (): void {
   renderGameboard(gameboard)
   startGame()
 }
-
-console.log('Pacman game started!')
