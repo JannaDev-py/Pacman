@@ -141,7 +141,7 @@ class Pacman {
     } else if (nextPositionX === 2) {
       config.pacmanPointsLeft -= 1
     }
-    if (nextPositionX === 'b' || nextPositionX === 'i' || nextPositionX === 'c' || nextPositionX === 'P') {
+    if (nextPositionX === 'b' || nextPositionX === 'i' || nextPositionX === 'c' || nextPositionX === 'p') {
       reUbiicatePacman()
     }
     this.cleanGameboard()
@@ -165,7 +165,7 @@ class Pacman {
     } else if (nextPosition === 2) {
       config.pacmanPointsLeft -= 1
     }
-    if (nextPosition === 'b' || nextPosition === 'i' || nextPosition === 'c' || nextPosition === 'P') {
+    if (nextPosition === 'b' || nextPosition === 'i' || nextPosition === 'c' || nextPosition === 'p') {
       reUbiicatePacman()
     }
     this.cleanGameboard()
@@ -189,7 +189,7 @@ class Pacman {
     } else if (nextPosition === 2) {
       config.pacmanPointsLeft -= 1
     }
-    if (nextPosition === 'b' || nextPosition === 'i' || nextPosition === 'c' || nextPosition === 'P') {
+    if (nextPosition === 'b' || nextPosition === 'i' || nextPosition === 'c' || nextPosition === 'p') {
       reUbiicatePacman()
     }
 
@@ -212,7 +212,7 @@ class Pacman {
     } else if (nextPosition === 2) {
       config.pacmanPointsLeft -= 1
     }
-    if (nextPosition === 'b' || nextPosition === 'i' || nextPosition === 'c' || nextPosition === 'P') {
+    if (nextPosition === 'b' || nextPosition === 'i' || nextPosition === 'c' || nextPosition === 'p') {
       reUbiicatePacman()
     }
 
